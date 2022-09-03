@@ -1,4 +1,5 @@
-import React, { useEffect, useState, useParams } from "react";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
 const Project = () => {
     let { id } = useParams();
@@ -21,7 +22,7 @@ const Project = () => {
 
     return(
         <div className="newProject">
-            <h1>Create a new Project</h1>
+            <h1>`Create a new Project ${id}`</h1>
             <label>Project name</label>
             <input type='text' name='project' placeholder='Project Name' />
             

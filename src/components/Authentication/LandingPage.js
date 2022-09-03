@@ -28,8 +28,8 @@ export default function LandingPage() {
 	}
 
 	return (
-		<div>
-			<h2>Welcome to Taskr</h2>
+		<div className="landingPage">
+			<img className="logo" src="./white-logo-with-title.png" alt="" />
 			<button className="btn-modal" onClick={loginPopup}>
 				Login
 			</button>

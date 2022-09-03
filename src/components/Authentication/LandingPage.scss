@@ -1,3 +1,7 @@
+$light: #f0eabe;
+$mid-light: #21e1e1;
+$mid: #3b9ae1;
+$dark: #3120e0;
 * {
 	box-sizing: border-box;
 }
@@ -34,4 +38,38 @@
 	top: 10px;
 	right: 10px;
 	padding: 5px 7px;
+}
+
+body {
+	background-size: cover;
+	background-image: linear-gradient(43deg, #3120e0 0%, #3b9ae1 46%, #21e1e1 100%);
+	background-repeat: no-repeat;
+	height: 100vh;
+}
+
+.landingPage {
+	.logo {
+		width: 400px;
+		height: 200px;
+		object-fit: cover;
+	}
+	.btn-modal {
+		border: none;
+		background-color: $light;
+		color: $dark !important;
+		font-size: 20px;
+		margin: 5px;
+		color: $dark;
+		padding: 12px 20px;
+		font-family: 'Raleway', sans-serif;
+		font-weight: 500;
+		border-radius: 5px;
+		box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+		cursor: pointer;
+	}
+	.btn-modal:hover {
+		background-color: $dark;
+		color: $light !important;
+		box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+	}
 }

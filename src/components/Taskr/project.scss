@@ -1,0 +1,17 @@
+* {
+	box-sizing: border-box;
+}
+
+.task {
+	border: 1px solid black;
+	width: 300px;
+	text-align: center;
+}
+
+.addTask {
+	background-color: black;
+	color: white;
+	display: flex;
+	flex-direction: column;
+	max-width: 300px;
+}

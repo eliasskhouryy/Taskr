@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { collection, getDocs, addDoc, updateDoc, doc } from 'firebase/firestore';
+import { db } from '../firebase';
 
 const Project = () => {
 	let { id } = useParams();
@@ -7,8 +9,18 @@ const Project = () => {
 	const [Brain, setBrain] = useState(['CHicken', 'Eggs']);
 	const [Ongoing, setOngoing] = useState([]);
 	const [Completed, setCompleted] = useState([]);
+	const projectsRef = collection(db, 'projects');
+	const [projectDetails, setProjectDetails] = useState([]);
 
+	useEffect(() => {
+		const getProjectDetails = async () => {
+			const data = await getDocs(projectsRef);
+			setProjectDetails(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+		};
+		getProjectDetails();
+	}, []);
 	console.log(id);
+
 	const Brainstorming = (Brain) => {
 		return (
 			<div>
@@ -22,7 +34,10 @@ const Project = () => {
 
 	return (
 		<div className="newProject">
-			<h1>Create a new Project</h1>
+			{projectDetails.map((project) => {
+				return <h1>{project.id === id ? project.title : ''}</h1>;
+			})}
+
 			<label>Project name</label>
 			<input type="text" name="project" placeholder="Project Name" />
 

@@ -33,9 +33,6 @@ export default function Dashboard() {
 	return (
 		<div>
 			<h1>Dashboard page</h1>
-			<Link to="/Project">
-				<h2>Add a Project</h2>
-			</Link>
 			<button onClick={handleLogout}>Logout</button>
 			<h2>Projects</h2>
 			<button className="btn-modal" onClick={() => setModal(!modal)}>
@@ -44,9 +41,11 @@ export default function Dashboard() {
 
 			{projectDetails.map((project) => {
 				return (
-					<div className="projectsContainer">
-						<h3>{user.uid === project.userId ? project.title : ''}</h3>
-					</div>
+					<Link to={`/project/${project.id}`}>
+						<div className="projectsContainer">
+							<h3>{user.uid === project.userId ? project.title : ''}</h3>
+						</div>
+					</Link>
 				);
 			})}
 			<div>

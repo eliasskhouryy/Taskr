@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useParams } from "react";
 
 const Project = () => {
+    let { id } = useParams();
     const [AddItem,setAddItem] = useState([]);
     const [Brain, setBrain] = useState(["CHicken", "Eggs"]);
     const [Ongoing,setOngoing] = useState([]);
     const [Completed,setCompleted] = useState([]);
 
 
-    
+    console.log(id)
         const Brainstorming = (Brain) => {
                 return (
                     <div>

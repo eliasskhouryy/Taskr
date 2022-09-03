@@ -5,6 +5,7 @@ import { collection, getDocs, addDoc, updateDoc, doc } from 'firebase/firestore'
 import CreateProject from './CreateProject';
 import '../Authentication/LandingPage.scss';
 import { db } from '../firebase';
+import { Link } from 'react-router-dom';
 
 export default function Dashboard() {
 	const [projectDetails, setProjectDetails] = useState([]);
@@ -32,6 +33,9 @@ export default function Dashboard() {
 	return (
 		<div>
 			<h1>Dashboard page</h1>
+			<Link to="/Project">
+				<h2>Add a Project</h2>
+			</Link>
 			<button onClick={handleLogout}>Logout</button>
 			<h2>Projects</h2>
 			<button className="btn-modal" onClick={() => setModal(!modal)}>

@@ -4,6 +4,7 @@ import { UserAuthContextProvider } from './context/UserAuthContext';
 import { useUserAuth } from './context/UserAuthContext';
 import ProtectedRoute from './Authentication/ProtectedRoute';
 import Dashboard from './Taskr/Dashboard';
+import Project from './Taskr/Project';
 
 function App() {
 	const user = useUserAuth();
@@ -20,6 +21,14 @@ function App() {
 							element={
 								<ProtectedRoute>
 									<Dashboard />
+								</ProtectedRoute>
+							}
+						/>
+						<Route
+							path="/Project"
+							element={
+								<ProtectedRoute>
+									<Project />
 								</ProtectedRoute>
 							}
 						/>

@@ -30,10 +30,10 @@ export default function LandingPage() {
 	return (
 		<div className="landingPage">
 			<div className="leftSide">
-				<img className="logo" src="./white-logo-only.png" alt="" />
+				<img className="logo" src="./white-logo-with-title.png" alt="" />
 			</div>
 			<div className="rightSide">
-				<div className="task">
+				<div className="box">
 					<h1>Welcome to Taskr</h1>
 					<button className="btn-modal" onClick={loginPopup}>
 						Login

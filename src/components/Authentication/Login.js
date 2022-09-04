@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Form, Alert } from 'react-bootstrap';
 import { useUserAuth } from '../context/UserAuthContext';
 import GoogleButton from 'react-google-button';
+import './forms.scss';
 
 const Login = () => {
 	const [email, setEmail] = useState('');
@@ -53,9 +54,6 @@ const Login = () => {
 				<hr />
 				<div>
 					<GoogleButton className="g-btn" type="dark" onClick={handleGoogleSignIn} />
-				</div>
-				<div className="bottomText">
-					Don't have an account? <Link to="/signup">Sign up</Link>
 				</div>
 			</div>
 		</div>

@@ -21,12 +21,13 @@ $dark: #3120e0;
 }
 
 .modal-content {
+	box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 	position: absolute;
 	top: 40%;
 	left: 50%;
 	transform: translate(-50%, -50%);
 	line-height: 1.4;
-	background: #f1f1f1;
+	background: $mid;
 	padding: 14px 28px;
 	border-radius: 3px;
 	max-width: 600px;
@@ -48,28 +49,111 @@ body {
 }
 
 .landingPage {
-	.logo {
-		width: 400px;
-		height: 200px;
-		object-fit: cover;
+	.leftSide {
+		display: inline-block;
+		vertical-align: top;
+		width: 50%;
+		height: 100vh;
+		.logo {
+			display: block;
+			margin-top: 25%;
+			margin-left: 20%;
+			width: 30vw;
+			object-fit: cover;
+		}
 	}
-	.btn-modal {
-		border: none;
-		background-color: $light;
-		color: $dark !important;
-		font-size: 20px;
-		margin: 5px;
-		color: $dark;
-		padding: 12px 20px;
-		font-family: 'Raleway', sans-serif;
-		font-weight: 500;
-		border-radius: 5px;
-		box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+	.rightSide {
+		display: inline-block;
+		width: 50%;
+		height: 100vh;
+		.task {
+			border: none;
+			width: 80%;
+			height: 100%;
+			display: inline-block;
+			padding-top: 45%;
+		}
+		h1 {
+			color: $light;
+			font-size: 56px;
+			margin: auto 0;
+		}
+		.btn-modal {
+			border: none;
+			background-color: $light;
+			color: $mid !important;
+			font-size: 20px;
+			color: $dark;
+			padding: 12px 20px;
+			display: block;
+			margin: 10px auto;
+			border-radius: 2px;
+			width: 70%;
+			font-family: 'Raleway', sans-serif;
+			font-weight: 600;
+			cursor: pointer;
+			box-shadow: rgba(240, 46, 170, 0.4) 5px 5px, rgba(240, 46, 170, 0.3) 10px 10px, rgba(240, 46, 170, 0.2) 15px 15px, rgba(240, 46, 170, 0.1) 20px 20px, rgba(240, 46, 170, 0.05) 25px 25px;
+		}
+		.btn-modal:hover {
+			background-color: $dark;
+			color: $light !important;
+			box-shadow: rgba(240, 46, 170, 0.4) -5px 5px, rgba(240, 46, 170, 0.3) -10px 10px, rgba(240, 46, 170, 0.2) -15px 15px, rgba(240, 46, 170, 0.1) -20px 20px,
+				rgba(240, 46, 170, 0.05) -25px 25px;
+		}
+	}
+
+	.close {
+		position: absolute;
+		right: 20px;
+		top: 20px;
+		width: 32px;
+		height: 32px;
+		opacity: 0.5;
 		cursor: pointer;
 	}
-	.btn-modal:hover {
-		background-color: $dark;
-		color: $light !important;
-		box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+	.close:hover {
+		opacity: 1;
+	}
+	.close:before,
+	.close:after {
+		position: absolute;
+		left: 15px;
+		content: ' ';
+		height: 33px;
+		width: 2px;
+		background-color: #333;
+	}
+	.close:before {
+		transform: rotate(45deg);
+	}
+	.close:after {
+		transform: rotate(-45deg);
+	}
+}
+
+@media screen and (max-width: 600px) {
+	.landingPage {
+		display: block;
+		.rightSide {
+			display: block;
+			width: 100%;
+			height: 10vh;
+			h1 {
+				font-size: 46px;
+			}
+			.task {
+				padding-top: 20%;
+				margin-top: 0;
+				width: 100vw;
+			}
+		}
+		.leftSide {
+			display: block;
+			width: 100%;
+			height: 10vh;
+			.logo {
+				margin: 0 auto;
+			}
+		}
 	}
 }

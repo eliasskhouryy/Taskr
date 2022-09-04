@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Form, Alert } from 'react-bootstrap';
 import { useUserAuth } from '../context/UserAuthContext';
+import './forms.scss';
 
 const Signup = () => {
 	const [email, setEmail] = useState('');
@@ -39,9 +40,6 @@ const Signup = () => {
 					</div>
 				</form>
 				<br />
-				<div className="bottomText">
-					Already have an account? <Link to="/login">Log In</Link>
-				</div>
 			</div>
 		</div>
 	);

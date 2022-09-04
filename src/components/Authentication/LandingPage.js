@@ -28,21 +28,26 @@ export default function LandingPage() {
 	}
 
 	return (
-		<div>
-			<h2>Welcome to Taskr</h2>
-			<button className="btn-modal" onClick={loginPopup}>
-				Login
-			</button>
-			<button className="btn-modal" onClick={signupPopup}>
-				SignUp
-			</button>
+		<div className="landingPage">
+			<div className="leftSide">
+				<img className="logo" src="./white-logo-only.png" alt="" />
+			</div>
+			<div className="rightSide">
+				<div className="task">
+					<h1>Welcome to Taskr</h1>
+					<button className="btn-modal" onClick={loginPopup}>
+						Login
+					</button>
+					<button className="btn-modal" onClick={signupPopup}>
+						SignUp
+					</button>
+				</div>
+			</div>
 			{modal && (
 				<div className="modal">
 					<div className="overlay">
 						<div className="modal-content">
-							<button className="close-modal" onClick={loginPopup}>
-								X
-							</button>
+							<div className="close" onClick={loginPopup}></div>
 							<Login />
 						</div>
 					</div>
@@ -52,9 +57,7 @@ export default function LandingPage() {
 				<div className="modal">
 					<div className="overlay">
 						<div className="modal-content">
-							<button className="close-modal" onClick={signupPopup}>
-								X
-							</button>
+							<div className="close" onClick={signupPopup}></div>
 							<Signup />
 						</div>
 					</div>

@@ -5,11 +5,14 @@ import { useUserAuth } from './context/UserAuthContext';
 import ProtectedRoute from './Authentication/ProtectedRoute';
 import Dashboard from './Taskr/Dashboard';
 import Project from './Taskr/Project';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 function App() {
 	const user = useUserAuth();
 
 	return (
+		<DndProvider backend={HTML5Backend}>
 		<div className="App">
 			<Router>
 				<UserAuthContextProvider>
@@ -37,6 +40,7 @@ function App() {
 				</UserAuthContextProvider>
 			</Router>
 		</div>
+		</DndProvider>
 	);
 }
 

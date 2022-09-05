@@ -3,7 +3,7 @@ import './nav.scss';
 import { useUserAuth } from '../context/UserAuthContext';
 import { useNavigate } from 'react-router';
 
-export default function NavBar() {
+export default function NavBar({ mainTitle }) {
 	const { logOut, user } = useUserAuth();
 	const navigate = useNavigate();
 
@@ -18,6 +18,7 @@ export default function NavBar() {
 	return (
 		<nav>
 			<img className="logo" src="/logo-with-title.png" alt="" onClick={() => navigate('/dashboard')} />
+			<h1>{mainTitle}</h1>
 			<a onClick={handleLogout}>Logout</a>
 		</nav>
 	);

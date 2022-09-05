@@ -1,0 +1,39 @@
+$light: #f0eabe;
+$mid-light: #21e1e1;
+$mid: #3b9ae1;
+$dark: #3120e0;
+* {
+	box-sizing: border-box;
+}
+nav {
+	box-shadow: rgba(33, 35, 38, 0.1) 0px 10px 10px -10px;
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	background-color: white;
+	.logo {
+		width: 200px;
+		height: 80px;
+		object-fit: cover;
+		cursor: pointer;
+	}
+	a {
+		cursor: pointer;
+		background-color: $dark;
+		color: white;
+		text-decoration: none;
+		font-size: 18px;
+		display: flex;
+		align-content: center;
+		margin: auto 30px;
+		padding: 8px 16px;
+		border-radius: 5px;
+		transition: all 0.3s ease-in-out;
+		font-weight: 600;
+	}
+	a:hover {
+		background-color: $mid;
+		color: white !important;
+		color: white;
+	}
+}

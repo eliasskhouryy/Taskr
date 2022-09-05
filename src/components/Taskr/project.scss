@@ -1,24 +1,52 @@
 * {
-  box-sizing: border-box;
+	box-sizing: border-box;
 }
 
 .task {
-  border: 1px solid black;
-  width: 300px;
-  text-align: center;
-  margin: 5px;
+	border: 1px solid black;
+	width: 300px;
+	text-align: center;
+	margin: 5px;
+	.close {
+		transition: all 0.3s ease-in-out;
+		position: sticky;
+		right: 20px;
+		top: 20px;
+		width: 32px;
+		height: 32px;
+		opacity: 0.5;
+		cursor: pointer;
+	}
+	.close:hover {
+		opacity: 1;
+	}
+	.close:before,
+	.close:after {
+		position: absolute;
+		left: 15px;
+		content: ' ';
+		height: 33px;
+		width: 2px;
+		background-color: #333;
+	}
+	.close:before {
+		transform: rotate(45deg);
+	}
+	.close:after {
+		transform: rotate(-45deg);
+	}
 }
 
 .addTask {
-  background-color: black;
-  color: white;
-  display: flex;
-  flex-direction: column;
-  max-width: 300px;
+	background-color: black;
+	color: white;
+	display: flex;
+	flex-direction: column;
+	max-width: 300px;
 }
 .done {
-  border: 3px solid black;
-  width: 20em;
-  height: 20em;
-  float: right;
+	border: 3px solid black;
+	width: 20em;
+	height: 20em;
+	float: right;
 }

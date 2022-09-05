@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useUserAuth } from '../context/UserAuthContext';
-import { collection, getDocs, addDoc, updateDoc, doc } from 'firebase/firestore';
+import { collection, getDocs, addDoc, updateDoc, doc, deleteDoc } from 'firebase/firestore';
+import { onSnapshot } from 'firebase/firestore';
 import { db } from '../firebase';
 import { useDrag } from 'react-dnd';
 import { useDrop } from 'react-dnd';
-
+import NavBar from './NavBar';
 
 import './project.scss';
 
-function Project(){
+function Project() {
 	let { id } = useParams();
 	const { logOut, user } = useUserAuth();
 	const [title, setTitle] = useState('');
@@ -20,8 +21,7 @@ function Project(){
 	const projectsRef = collection(db, 'projects');
 	const tasksRef = collection(db, 'tasks');
 	const [projectDetails, setProjectDetails] = useState([]);
-    const [board,setBoard] = useState([])
-
+	const [board, setBoard] = useState([]);
 
    
     
@@ -40,27 +40,26 @@ function Project(){
         console.log(taskList, allTasks)
         setBoard((board) => [...board, ...taskList])
     }
+  
 
-	const addTask = async () => {
+	const addTask = async (e) => {
+		e.preventDefault();
 		await addDoc(tasksRef, { projectId: id, title: title, comment: comment, status: false });
-		window.location.reload();
+		setTitle('');
+		setComment('');
 	};
 
-	useEffect(() => {
-		const getProjectDetails = async () => {
-			const data = await getDocs(projectsRef);
-			setProjectDetails(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-		};
-		getProjectDetails();
-		const getTaskDetails = async () => {
-			const data = await getDocs(tasksRef);
-			setTasks(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-		};
-		getTaskDetails();
-	}, []);
+	useEffect(
+		() => onSnapshot(collection(db, 'tasks'), (snapshot) => setTasks(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))),
+
+		() => onSnapshot(collection(db, 'projects'), (snapshot) => setProjectDetails(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))),
+		[]
+	);
 
 	return (
         <div className="newProject">
+            <NavBar />
+
             {projectDetails.map((project) => {
                 return <h1>{project.id === id ? project.title : ''}</h1>;
             })}
@@ -86,6 +85,7 @@ function Project(){
                             <h3>{task.title}</h3>
                                 <p>{task.comment}</p>
                                 <p>{task.status}</p>
+                               
                         </div>
                     )
                 })}    
@@ -97,6 +97,14 @@ function Project(){
 
 
 const Task = ({ task }) => {
+    const handleDelete = async (id) => {
+		const projectsRef = doc(db, 'tasks', id);
+		try {
+			await deleteDoc(projectsRef);
+		} catch (err) {
+			alert(err);
+		}
+	};
     const [{isDragging}, drag] = useDrag(() => ({
         type:"task",
         item: {id: task.id},
@@ -106,12 +114,20 @@ const Task = ({ task }) => {
     }))
 
     return (
-        <div className='test'> 
-        <div className="task" key={task.id} ref={drag} id={task.id} >
-            <h3>{task.title}</h3>
-            <p>{task.comment}</p>
-            <p>{task.status}</p>
-        </div>
+        <div>
+            <div className='test'> 
+                <div className="task" key={task.id} ref={drag} id={task.id} >
+                    <h3>{task.title}</h3>
+                    <p>{task.comment}</p>
+                    <p>{task.status}</p>
+                    <div
+                                            className="close"
+                                            onClick={() => {
+                                                handleDelete(task.id);
+                                            }}
+                                        ></div>
+                </div>
+            </div>
     </div>
     );
 

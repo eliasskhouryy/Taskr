@@ -14,33 +14,13 @@ function Project(){
 	const { logOut, user } = useUserAuth();
 	const [title, setTitle] = useState('');
 	const [comment, setComment] = useState('');
-	const [allTasks, setTasks] = useState([]);
-    console.log('allTasks', allTasks)
+	const [tasks, setTasks] = useState([]);
 	const [newTask, setNewTask] = useState('');
 	const projectsRef = collection(db, 'projects');
 	const tasksRef = collection(db, 'tasks');
 	const [projectDetails, setProjectDetails] = useState([]);
     const [board,setBoard] = useState([])
-
-
-   
     
-    const [{isOver},drop] = useDrop(() => ({
-        accept: "task",
-        drop: (item) => addTaskToDone(item.id),
-        collect: (monitor) => ({
-            isOver: !!monitor.isOver(),
-
-        })
-    }))
-    
-    const addTaskToDone = (id) => {
-        console.log(id)
-        const taskList = allTasks.filter((task) => task.id == id)
-        console.log(taskList, allTasks)
-        setBoard((board) => [...board, ...taskList])
-    }
-
 	const addTask = async () => {
 		await addDoc(tasksRef, { projectId: id, title: title, comment: comment, status: false });
 		window.location.reload();
@@ -65,36 +45,24 @@ function Project(){
                 return <h1>{project.id === id ? project.title : ''}</h1>;
             })}
             <div>
-                {allTasks.map((task) => {
+                {tasks.map((task) => {
                     if (id === task.projectId) {
                         return (
                             <Task task={task} />
                         );
                     }
                 })}
-                <div className="addTask">
-                    <h2>Add a new Task </h2>
-                    <input type="text" onChange={(e) => setTitle(e.target.value)} placeholder="task title" required />
-                    <textarea type="text" onChange={(e) => setComment(e.target.value)} placeholder="comment" />
-                    <button onClick={addTask}>add</button>
-                </div>
-            </div>
-            <div className='done' ref={drop}>
                 {board.map((task) => {
-                    return  (
-                        <div key={task.id} id={task.id}>
-                            <h3>{task.title}</h3>
-                                <p>{task.comment}</p>
-                                <p>{task.status}</p>
-                        </div>
-                    )
-                })}    
+                    if( id === task.projectId){
+                        return(
+                            <ShowTask task={task} />
+                        )
+                    }
+                })}
             </div>
         </div> 
     );
 };
-
-
 
 const Task = ({ task }) => {
     const [{isDragging}, drag] = useDrag(() => ({
@@ -116,5 +84,32 @@ const Task = ({ task }) => {
     );
 
 };
+
+const ShowTask = ({task}) => {
+    const [board,setBoard] = useState([])
+    const [{isOver},drop] = useDrop(() => ({
+        accept: "task",
+        drop: (item) => addTaskToDone(item.id),
+        collect: (monitor) => ({
+            isOver: !!monitor.isOver(),
+
+        })
+    }))
+    const addTaskToDone = (id) => {
+        console.log(id)
+        const taskList = task.filter((task) => task.id === id)
+        setBoard((board) => [...board, taskList[0]])
+    }
+
+    return(
+        <div className='done' ref={drop}>
+                <div key={task.id} id={task.id} >
+                    <h3>{task.title}</h3>
+                    <p>{task.comment}</p>
+                    <p>{task.status}</p>
+                </div>  
+        </div>
+    )
+}
 
 export default Project;

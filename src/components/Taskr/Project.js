@@ -23,7 +23,17 @@ function Project() {
 	const [projectDetails, setProjectDetails] = useState([]);
 	const [board, setBoard] = useState([]);
 
-   
+    useEffect(
+		() => onSnapshot(collection(db, 'tasks'), (snapshot) => {
+            const tasks = snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+            setTasks(tasks);
+            window.TASKS = tasks;
+            console.log('called')
+        }),
+
+		() => onSnapshot(collection(db, 'projects'), (snapshot) => setProjectDetails(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))),
+		[]
+	);
     
     const [{isOver},drop] = useDrop(() => ({
         accept: "task",
@@ -33,11 +43,13 @@ function Project() {
 
         })
     }))
+    console.log(allTasks)
     
     const addTaskToDone = (id) => {
         console.log(id)
-        const taskList = allTasks.filter((task) => task.id == id)
-        console.log(taskList, allTasks)
+        console.log(window.TASKS)
+        const taskList = window.TASKS.filter((task) => task.id === id ? task.id : '' )
+        console.log(taskList)
         setBoard((board) => [...board, ...taskList])
     }
   
@@ -49,12 +61,7 @@ function Project() {
 		setComment('');
 	};
 
-	useEffect(
-		() => onSnapshot(collection(db, 'tasks'), (snapshot) => setTasks(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))),
 
-		() => onSnapshot(collection(db, 'projects'), (snapshot) => setProjectDetails(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))),
-		[]
-	);
 
 	return (
         <div className="newProject">

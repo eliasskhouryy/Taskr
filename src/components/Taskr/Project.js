@@ -7,6 +7,7 @@ import { db } from '../firebase';
 import { useDrag } from 'react-dnd';
 import { useDrop } from 'react-dnd';
 import NavBar from './NavBar';
+import _ from 'underscore'
 
 import './project.scss';
 
@@ -16,7 +17,6 @@ function Project() {
 	const [title, setTitle] = useState('');
 	const [comment, setComment] = useState('');
 	const [allTasks, setTasks] = useState([]);
-	console.log('allTasks', allTasks);
 	const tasksRef = collection(db, 'tasks');
 	const [projectDetails, setProjectDetails] = useState([]);
 	const [board, setBoard] = useState([]);
@@ -27,13 +27,14 @@ function Project() {
 				const tasks = snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
 				setTasks(tasks);
 				window.TASKS = tasks;
-				console.log('called');
 			}),
-
+		[]
+	);
+	useEffect(
 		() => onSnapshot(collection(db, 'projects'), (snapshot) => setProjectDetails(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))),
 		[]
 	);
-
+    
 	const handleDelete = async (id) => {
 		const projectsRef = doc(db, 'tasks', id);
 		try {
@@ -49,13 +50,13 @@ function Project() {
 			isOver: !!monitor.isOver(),
 		}),
 	}));
-	console.log(allTasks);
 
 	const addTaskToDone = (id) => {
-		console.log(id);
-		console.log(window.TASKS);
+        handleDelete(id)
 		const taskList = window.TASKS.filter((task) => (task.id === id ? task.id : ''));
 		setBoard((board) => [...board, ...taskList]);
+        await addDoc(tasksRef, { projectId: id, title: title, comment: comment, status: false });
+
 	};
 
 	const addTask = async (e) => {
@@ -64,6 +65,16 @@ function Project() {
 		setTitle('');
 		setComment('');
 	};
+
+//    const removeFromTasks = () => {
+//     const checkBoard = board.filter((task1) => (console.log(task1.id)));
+//     const checkTasks = window.TASKS.filter((task2) => (console.log(task2.id)));
+ 
+//    }
+//    removeFromTasks()
+     
+            
+        
 
 	return (
 		<div className="newProject">

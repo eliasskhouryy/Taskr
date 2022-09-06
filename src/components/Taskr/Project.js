@@ -105,7 +105,7 @@ function Project() {
 			<div className="done" ref={drop}>
 				{completeTasks.map((task) => {
 					return (
-						<div className="task" key={task.id} id={task.id}>
+						<div className="task" key={task.id} id={task.id} >
 							<h3>{task.title}</h3>
 							<p>{task.comment}</p>
 							<p>{task.status}</p>

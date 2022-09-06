@@ -14,20 +14,36 @@ import Slider from 'react-slick';
 
 export default function Dashboard() {
 	const [projectDetails, setProjectDetails] = useState([]);
+	const [groupProjectDetails, setGroupProjectDetails] = useState([]);
 	const { logOut, user } = useUserAuth();
 	const navigate = useNavigate();
 	const projectsRef = collection(db, 'projects');
+	const groupProjectsRef = collection(db, 'groupProjects');
 	const [modal, setModal] = useState(false);
+	const [modal2, setModal2] = useState(false);
 	const [project, setProject] = useState('');
 	const [description, setDescription] = useState('');
+	const [otherUsers, setOtherUsers] = useState([]);
+	const [groupProject, setGroupProject] = useState('');
+	const [groupDescription, setGroupDescription] = useState('');
+
 	const addProject = async (e) => {
 		e.preventDefault();
 		await addDoc(projectsRef, { userId: user.uid, title: project, description: description });
 		setModal(!modal);
 	};
-
+	const addGroupProject = async (e) => {
+		e.preventDefault();
+		await addDoc(groupProjectsRef, { users: [user.uid, ...[otherUsers]], title: groupProject, description: groupDescription });
+		setModal2(!modal2);
+	};
 	useEffect(
 		() => onSnapshot(collection(db, 'projects'), (snapshot) => setProjectDetails(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))),
+
+		[]
+	);
+	useEffect(
+		() => onSnapshot(collection(db, 'groupProjects'), (snapshot) => setGroupProjectDetails(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))),
 
 		[]
 	);
@@ -36,6 +52,14 @@ export default function Dashboard() {
 		const projectsRef = doc(db, 'projects', id);
 		try {
 			await deleteDoc(projectsRef);
+		} catch (err) {
+			alert(err);
+		}
+	};
+	const handleDelete2 = async (id) => {
+		const groupProjectsRef = doc(db, 'groupProjects', id);
+		try {
+			await deleteDoc(groupProjectsRef);
 		} catch (err) {
 			alert(err);
 		}
@@ -98,12 +122,66 @@ export default function Dashboard() {
 						</div>
 					)}
 				</div>
-				<h1>
+				{/* //////////////////////////////////////////////////////////////////////// */}
+				<h1 className="alternative">
 					Collaboration{' '}
 					<span>
-						Projects <AddBoxOutlinedIcon className="btn-modal" onClick={() => setModal(!modal)} />
+						Projects <AddBoxOutlinedIcon className="btn-modal" onClick={() => setModal2(!modal2)} />
 					</span>
 				</h1>
+				<div className="containing1">
+					{groupProjectDetails
+						.map((project) => {
+							return (
+								<div className="projects">
+									{' '}
+									{project.users.map((useri) =>
+										user.email == useri || user.uid == useri ? (
+											<div className="projectsContainer">
+												<Link to={`/project/${project.id}`}>
+													<h3>{user.uid == useri || user.email == useri ? project.title : ''}</h3>
+												</Link>
+												<h4>{user.uid == useri || user.email == useri ? project.description : ''}</h4>
+												{user.uid == useri ? (
+													<div
+														className="close"
+														onClick={() => {
+															handleDelete2(project.id);
+														}}
+													></div>
+												) : (
+													''
+												)}
+											</div>
+										) : (
+											''
+										)
+									)}
+								</div>
+							);
+						})
+						.reverse()}
+				</div>
+				<div>
+					{modal2 && (
+						<div className="modal">
+							<div className="overlay">
+								<div className="modal-content">
+									<div className="close" onClick={() => setModal2(!modal2)}></div>
+									<div>
+										<form className="formy" onSubmit={addGroupProject}>
+											<h2>Add a new Project </h2>
+											<input required placeholder="Project Title" type="text" onChange={(e) => setGroupProject(e.target.value)} />
+											<textarea required placeholder="Project Description" type="text" onChange={(e) => setGroupDescription(e.target.value)} />
+											<input required placeholder="Other Users" type="text" onChange={(e) => setOtherUsers(e.target.value)} />
+											<button>add</button>
+										</form>
+									</div>
+								</div>
+							</div>
+						</div>
+					)}
+				</div>
 			</div>
 		</div>
 	);

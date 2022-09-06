@@ -1,52 +1,232 @@
 * {
 	box-sizing: border-box;
 }
+$light: #f0eabe;
+$mid-light: #21e1e1;
+$mid: #3b9ae1;
+$dark: #3120e0;
 
-.task {
-	border: 1px solid black;
+.projectBody {
+	height: 100vh;
+	width: 100%;
+	background-color: #e9ebee;
+	.newProject {
+		display: flex;
+		width: 100vw;
+		justify-content: space-around;
+
+		.addTask {
+			display: inline-block;
+			vertical-align: top;
+			color: $light;
+			margin: 20px;
+			width: 370px;
+			h2 {
+				text-align: center;
+				margin: 0px auto;
+				width: 350px;
+				margin-bottom: 10px;
+				border-radius: 5px;
+				background-color: $dark;
+				padding: 20px;
+				color: white;
+			}
+			.taskList {
+				overflow-y: scroll;
+				max-height: 40vh;
+				.listTask {
+					background-color: $mid;
+					width: 350px;
+					display: inline-block;
+					padding: 20px;
+					cursor: grab;
+					margin: 10px;
+					margin-top: 0;
+					border-radius: 5px;
+					h3 {
+						margin: 0 auto;
+					}
+					.close {
+						transition: all 0.3s ease-in-out;
+						position: sticky;
+						right: 20px;
+						top: 20px;
+						width: 32px;
+						height: 32px;
+						opacity: 0.5;
+						cursor: pointer;
+					}
+					.close:hover {
+						opacity: 1;
+						transform: rotate(-90deg);
+					}
+					.close:before,
+					.close:after {
+						position: absolute;
+						left: 15px;
+						content: ' ';
+						height: 33px;
+						width: 2px;
+						background-color: #333;
+					}
+					.close:before {
+						transform: rotate(45deg);
+					}
+					.close:after {
+						transform: rotate(-45deg);
+					}
+				}
+			}
+			.listTask:active {
+				cursor: grabbing;
+				background-color: #2d79b3;
+			}
+			.listTask:hover {
+				transition: all 0.2s ease-in-out;
+
+				box-shadow: #77b9a9 0px 0px 0px 3px;
+			}
+			.taskForm {
+				background-color: $dark;
+				padding: 20px;
+				display: block;
+				margin-left: 10px;
+				width: 350px;
+				border-radius: 5px;
+				margin-top: 10px;
+
+				h3 {
+					text-align: center;
+					margin-top: 5px;
+				}
+
+				input,
+				textarea {
+					display: block;
+					width: 100%;
+					padding: 6px 10px;
+					margin-bottom: 7px;
+					border-radius: 2px;
+					border: none;
+				}
+				button {
+					width: 100%;
+					padding: 8px 14px;
+					color: $light;
+					background-color: $mid;
+					border-radius: 2px;
+					border: none;
+					margin: 10px 0;
+					margin-top: 0;
+					cursor: pointer;
+				}
+				button:hover {
+					transition: all 0.2s ease-in-out;
+
+					box-shadow: #8fe3cf 0px 0px 0px 3px;
+				}
+			}
+		}
+		.done {
+			h2 {
+				text-align: center;
+				margin: 20px auto;
+				margin-bottom: 0px;
+				border-radius: 5px;
+				background-color: #2e9369;
+				padding: 20px;
+				color: white;
+			}
+			.donely {
+				display: inline-block;
+				width: 350px;
+				overflow-y: scroll;
+				height: 70vh;
+
+				.task {
+					background-color: #36ae7c;
+					color: white;
+					width: 100%;
+					text-align: center;
+					padding: 20px;
+					margin-top: 10px;
+					border-radius: 5px;
+				}
+			}
+		}
+	}
+}
+
+.chatButton {
+	position: absolute;
+	box-sizing: content-box;
+	font-size: 36px;
+	bottom: 20px;
+	right: 20px;
+	color: $light;
+	background-color: $dark;
+	border-radius: 25%;
+	padding: 15px;
+	cursor: pointer;
+	box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+}
+.chatButton:hover {
+	box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
+}
+
+.chatBox {
+	.chatScreen {
+		overflow-y: scroll;
+		background-color: $mid-light;
+		height: 300px;
+	}
+	position: absolute;
+	padding: 20px;
+	bottom: 100px;
+	right: 20px;
+	background-color: $mid;
+	height: 400px;
 	width: 300px;
-	text-align: center;
-	margin: 5px;
-	.close {
-		transition: all 0.3s ease-in-out;
-		position: sticky;
-		right: 20px;
-		top: 20px;
-		width: 32px;
-		height: 32px;
-		opacity: 0.5;
-		cursor: pointer;
-	}
-	.close:hover {
-		opacity: 1;
-	}
-	.close:before,
-	.close:after {
-		position: absolute;
-		left: 15px;
-		content: ' ';
-		height: 33px;
-		width: 2px;
-		background-color: #333;
-	}
-	.close:before {
-		transform: rotate(45deg);
-	}
-	.close:after {
-		transform: rotate(-45deg);
-	}
-}
+	border-radius: 5px;
+	box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
 
-.addTask {
-	background-color: black;
-	color: white;
-	display: flex;
-	flex-direction: column;
-	max-width: 300px;
-}
-.done {
-	border: 3px solid black;
-	width: 20em;
-	height: 20em;
-	float: right;
+	.chatForm {
+		position: absolute;
+		bottom: 20px;
+		color: black;
+		behavior: smooth;
+
+		input {
+			display: inline;
+			width: 200px;
+			padding: 8px;
+			border-radius: 2px;
+			border: none;
+		}
+		button {
+			background: transparent;
+			border: none !important;
+		}
+		.send {
+			box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+			display: inline;
+			color: $light;
+			position: absolute;
+			bottom: -7px;
+			left: 220px;
+			background-color: $dark;
+			border-radius: 50%;
+			padding: 10px;
+			box-sizing: content-box;
+			cursor: pointer;
+		}
+	}
+	.currentUser {
+		width: 100%;
+		text-align: right;
+	}
+	.otherUser {
+		width: 100%;
+		text-align: left;
+	}
 }

@@ -10,7 +10,6 @@ import { Link } from 'react-router-dom';
 import NavBar from './NavBar';
 import './dashboard.scss';
 import '../Authentication/forms.scss';
-import Slider from 'react-slick';
 
 export default function Dashboard() {
 	const [projectDetails, setProjectDetails] = useState([]);
@@ -29,12 +28,12 @@ export default function Dashboard() {
 
 	const addProject = async (e) => {
 		e.preventDefault();
-		await addDoc(projectsRef, { userId: user.uid, title: project, description: description });
+		await addDoc(projectsRef, { userId: user.uid, title: project, description: description, time: new Date().getTime() });
 		setModal(!modal);
 	};
 	const addGroupProject = async (e) => {
 		e.preventDefault();
-		await addDoc(groupProjectsRef, { users: [user.uid, ...[otherUsers]], title: groupProject, description: groupDescription });
+		await addDoc(groupProjectsRef, { users: [user.uid, ...[otherUsers]], title: groupProject, description: groupDescription, time: new Date().getTime() });
 		setModal2(!modal2);
 	};
 	useEffect(
@@ -77,6 +76,7 @@ export default function Dashboard() {
 				</h1>
 				<div className="containing">
 					{projectDetails
+						.sort((objA, objB) => Number(objA.time) - Number(objB.time))
 						.map((project) => {
 							return (
 								<div className="projects">
@@ -131,6 +131,7 @@ export default function Dashboard() {
 				</h1>
 				<div className="containing1">
 					{groupProjectDetails
+						.sort((objA, objB) => Number(objA.time) - Number(objB.time))
 						.map((project) => {
 							return (
 								<div className="projects">
@@ -142,7 +143,7 @@ export default function Dashboard() {
 													<h3>{user.uid == useri || user.email == useri ? project.title : ''}</h3>
 												</Link>
 												<h4>{user.uid == useri || user.email == useri ? project.description : ''}</h4>
-												{user.uid == useri ? (
+												{user.uid == useri || user.email == useri ? (
 													<div
 														className="close"
 														onClick={() => {
@@ -166,7 +167,7 @@ export default function Dashboard() {
 					{modal2 && (
 						<div className="modal">
 							<div className="overlay">
-								<div className="modal-content">
+								<div className="modal-content2">
 									<div className="close" onClick={() => setModal2(!modal2)}></div>
 									<div>
 										<form className="formy" onSubmit={addGroupProject}>

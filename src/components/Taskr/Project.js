@@ -9,6 +9,7 @@ import { useDrop } from 'react-dnd';
 import NavBar from './NavBar';
 
 import './project.scss';
+import { async } from '@firebase/util';
 
 function Project() {
 	let { id } = useParams();
@@ -17,7 +18,9 @@ function Project() {
 	const [comment, setComment] = useState('');
 	const [allTasks, setTasks] = useState([]);
 	const tasksRef = collection(db, 'tasks');
+	const completeTasksRef = collection(db, 'completeTasks');
 	const [projectDetails, setProjectDetails] = useState([]);
+	const [completeTasks, setCompleteTasks] = useState([]);
 	const [board, setBoard] = useState([]);
 
 	useEffect(
@@ -30,6 +33,7 @@ function Project() {
 		[]
 	);
 	useEffect(() => onSnapshot(collection(db, 'projects'), (snapshot) => setProjectDetails(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))), []);
+	useEffect(() => onSnapshot(collection(db, 'completeTasks'), (snapshot) => setCompleteTasks(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))), []);
 
 	const handleDelete = async (id) => {
 		const projectsRef = doc(db, 'tasks', id);
@@ -41,17 +45,17 @@ function Project() {
 	};
 	const [{ isOver }, drop] = useDrop(() => ({
 		accept: 'task',
-		drop: (item) => addTaskToDone(item.id),
+		drop: (item) => addTaskToDone(item.id, item.title, item.comment),
 		collect: (monitor) => ({
 			isOver: !!monitor.isOver(),
 		}),
 	}));
 
-	const addTaskToDone = (id) => {
-		handleDelete(id);
-		const taskList = window.TASKS.filter((task) => (task.id === id ? task.id : ''));
+	const addTaskToDone = async (taskId, title, comment) => {
+		handleDelete(taskId);
+		const taskList = window.TASKS.filter((task) => (task.taskId === id ? task.taskId : ''));
+		await addDoc(completeTasksRef, { projectId: id, title: title, comment: comment, status: false });
 		setBoard((board) => [...board, ...taskList]);
-		// await addDoc(tasksRef, { projectId: id, title: title, comment: comment, status: false });
 	};
 
 	const addTask = async (e) => {
@@ -89,15 +93,17 @@ function Project() {
 				</div>
 			</div>
 			<div className="done" ref={drop}>
-				{board.map((task) => {
-					return (
+				{completeTasks.map((task) =>
+					id === task.projectId ? (
 						<div className="task" key={task.id} id={task.id}>
-							<h3>{task.title}</h3>
-							<p>{task.comment}</p>
-							<p>{task.status}</p>
+							<h3>{id === task.projectId && task.title}</h3>
+							<p>{id === task.projectId && task.comment}</p>
+							<p>{id === task.projectId && task.status}</p>
 						</div>
-					);
-				})}
+					) : (
+						''
+					)
+				)}
 			</div>
 		</div>
 	);
@@ -114,7 +120,7 @@ const Task = ({ task }) => {
 	};
 	const [{ isDragging }, drag] = useDrag(() => ({
 		type: 'task',
-		item: { id: task.id },
+		item: { id: task.id, title: task.title, comment: task.comment },
 		collect: (monitor) => ({
 			isDragging: !!monitor.isDragging(),
 		}),

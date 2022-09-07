@@ -51,7 +51,7 @@ export default function GroupProject() {
 	useEffect(() => onSnapshot(collection(db, 'completeTasks'), (snapshot) => setCompleteTasks(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))), []);
 	useEffect(() => onSnapshot(collection(db, 'chat'), (snapshot) => setChat(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))), []);
 	useEffect(() => onSnapshot(collection(db, 'inProcessGroup'), (snapshot) => setInProcessGroup(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))), []);
-	
+
 	const handleDelete = async (id) => {
 		const projectsRef = doc(db, 'tasks', id);
 		try {
@@ -61,7 +61,7 @@ export default function GroupProject() {
 		}
 	};
 	const handleDeleteFromProcess = async (id) => {
-		console.log(id)
+		console.log(id);
 		const inProcessGroupRef = doc(db, 'inProcessGroup', id);
 		try {
 			await deleteDoc(inProcessGroupRef);
@@ -70,7 +70,7 @@ export default function GroupProject() {
 		}
 	};
 	const handleDeleteFromCompleted = async (id) => {
-		console.log(id)
+		console.log(id);
 		const inProcessGroupRef = doc(db, 'completeTasks', id);
 		try {
 			await deleteDoc(inProcessGroupRef);
@@ -94,7 +94,7 @@ export default function GroupProject() {
 			isOver: !!monitor.isOver(),
 		}),
 	}));
-	
+
 	const [{ isOver2 }, drop2] = useDrop(() => ({
 		accept: 'task',
 		drop: (item) => addTaskToToDo(item.id, item.title, item.comment),
@@ -106,24 +106,24 @@ export default function GroupProject() {
 	const addTaskToDone = async (taskId, title, comment) => {
 		console.log('done');
 		handleDeleteFromProcess(taskId);
-		handleDelete(taskId)
+		handleDelete(taskId);
 		// const taskList = window.TASKS.filter((task) => (task.taskId === id ? task.taskId : ''));
 		await addDoc(completeTasksRef, { projectId: id, title: title, comment: comment, status: false, userEmail: user.email, time: new Date().getTime() });
 	};
 	const addTaskToInProcess = async (taskId, title, comment) => {
 		console.log('process');
-		handleDeleteFromCompleted(taskId)
+		handleDeleteFromCompleted(taskId);
 		handleDelete(taskId);
 		// const taskList = window.TASKS.filter((task) => (task.taskId === id ? task.taskId : ''));
 		await addDoc(inProcessGroupRef, { projectId: id, title: title, comment: comment, status: false, userEmail: user.email, time: new Date().getTime() });
 	};
 	const addTaskToToDo = async (taskId, title, comment) => {
 		console.log('todo');
-		handleDeleteFromCompleted(taskId)
+		handleDeleteFromCompleted(taskId);
 		handleDeleteFromProcess(taskId);
 		// const taskList = window.TASKS.filter((task) => (task.taskId === id ? task.taskId : ''));
 		await addDoc(tasksRef, { projectId: id, title: title, comment: comment, status: false, userEmail: user.email, time: new Date().getTime() });
-	}
+	};
 
 	const addTask = async (e) => {
 		e.preventDefault();
@@ -195,7 +195,7 @@ export default function GroupProject() {
 									.sort((objA, objB) => Number(objA.time) - Number(objB.time))
 									.map((task) =>
 										id === task.projectId ? (
-											<div className="task" >
+											<div className="task">
 												<Complete task={task} />
 											</div>
 										) : (
@@ -207,6 +207,7 @@ export default function GroupProject() {
 						<ModeCommentRoundedIcon className="chatButton" onClick={() => setModal(!modal)} />
 						{modal && (
 							<div className="chatBox">
+								<h3>Group Chat</h3>
 								<div className="chatScreen">
 									{chat
 										.sort((objA, objB) => Number(objA.time) - Number(objB.time))
@@ -215,7 +216,21 @@ export default function GroupProject() {
 												<div>
 													{' '}
 													{id === item.projectId && (
-														<div>{item.userEmail === user.email ? <p className="currentUser">{item.message}</p> : <p className="otherUser">{item.message}</p>}</div>
+														<div>
+															{item.userEmail === user.email ? (
+																<div className="currentUser">
+																	<div className="rightChat">
+																		<p>{item.message}</p>
+																		<p className="identify">{item.userEmail}</p>
+																	</div>
+																</div>
+															) : (
+																<div className="otherUser">
+																	<p className="message">{item.message}</p>
+																	<p className="identify">{item.userEmail}</p>
+																</div>
+															)}
+														</div>
 													)}
 												</div>
 											);

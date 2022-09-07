@@ -219,13 +219,14 @@ export default function GroupProject() {
 														<div>
 															{item.userEmail === user.email ? (
 																<div className="currentUser">
-																	<p>{item.message}</p>
-																	<p className="identify">{item.userEmail}</p>
+																	<div className="rightChat">
+																		<p>{item.message}</p>
+																		<p className="identify">{item.userEmail}</p>
+																	</div>
 																</div>
 															) : (
 																<div className="otherUser">
-																	<p>{item.message}</p>
-
+																	<p className="message">{item.message}</p>
 																	<p className="identify">{item.userEmail}</p>
 																</div>
 															)}

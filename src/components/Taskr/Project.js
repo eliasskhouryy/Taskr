@@ -35,6 +35,8 @@ function Project() {
 	const [completeTasks, setCompleteTasks] = useState([]);
 	const [board, setBoard] = useState([]);
 	const [modal, setModal] = useState(false);
+	const inProcessRef = collection(db, 'inProcess');
+	const [inProcess, setInProcess] = useState(['ehde']);
 
 	useEffect(
 		() =>
@@ -47,6 +49,7 @@ function Project() {
 	);
 	useEffect(() => onSnapshot(collection(db, 'projects'), (snapshot) => setProjectDetails(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))), []);
 	useEffect(() => onSnapshot(collection(db, 'completeTasks'), (snapshot) => setCompleteTasks(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))), []);
+	useEffect(() => onSnapshot(collection(db, 'inProcess'), (snapshot) => setInProcess(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))), []);
 	useEffect(() => onSnapshot(collection(db, 'chat'), (snapshot) => setChat(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))), []);
 
 	const handleDelete = async (id) => {
@@ -65,11 +68,25 @@ function Project() {
 		}),
 	}));
 
+	const [{ isOver1 }, drop1] = useDrop(() => ({
+		accept: 'task',
+		drop: (item) => addTaskToInProcess(item.id, item.title, item.comment),
+		collect: (monitor) => ({
+			isOver: !!monitor.isOver(),
+		}),
+	}));
+
 	const addTaskToDone = async (taskId, title, comment) => {
+		console.log('done');
 		handleDelete(taskId);
-		const taskList = window.TASKS.filter((task) => (task.taskId === id ? task.taskId : ''));
+		// const taskList = window.TASKS.filter((task) => (task.taskId === id ? task.taskId : ''));
 		await addDoc(completeTasksRef, { projectId: id, title: title, comment: comment, status: false, userEmail: user.email, time: new Date().getTime() });
-		setBoard((board) => [...board, ...taskList]);
+	};
+	const addTaskToInProcess = async (taskId, title, comment) => {
+		console.log('process');
+		handleDelete(taskId);
+		// const taskList = window.TASKS.filter((task) => (task.taskId === id ? task.taskId : ''));
+		await addDoc(inProcessRef, { projectId: id, title: title, comment: comment, status: false, userEmail: user.email, time: new Date().getTime() });
 	};
 
 	const addTask = async (e) => {
@@ -117,6 +134,22 @@ function Project() {
 								<input required value={title} type="text" onChange={(e) => setTitle(e.target.value)} placeholder="task title" />
 								<textarea value={comment} type="text" onChange={(e) => setComment(e.target.value)} placeholder="comment" />
 								<button onClick={addTask}>Add</button>
+							</div>
+						</div>
+						<div className="process">
+							<h2>In Process</h2>
+							<div className="donely taskList" ref={drop1}>
+								{inProcess
+									.sort((objA, objB) => Number(objA.time) - Number(objB.time))
+									.map((task) =>
+										id === task.projectId ? (
+											<div className="listTask task">
+												<Process task={task} />
+											</div>
+										) : (
+											''
+										)
+									)}
 							</div>
 						</div>
 						<div className="done">
@@ -202,6 +235,40 @@ const Task = ({ task }) => {
 			<p>{task.comment}</p>
 			<p>
 				<i>created by: </i>
+				{task.userEmail}
+			</p>
+			<div
+				className="close"
+				onClick={() => {
+					handleDelete(task.id);
+				}}
+			></div>
+		</div>
+	);
+};
+const Process = ({ task }) => {
+	const handleDelete = async (id) => {
+		const inProcessRef = doc(db, 'inProcess', id);
+		try {
+			await deleteDoc(inProcessRef);
+		} catch (err) {
+			alert(err);
+		}
+	};
+	const [{ isDragging }, drag] = useDrag(() => ({
+		type: 'task',
+		item: { id: task.id, title: task.title, comment: task.comment },
+		collect: (monitor) => ({
+			isDragging: !!monitor.isDragging(),
+		}),
+	}));
+
+	return (
+		<div key={task.id} ref={drag} id={task.id}>
+			<h3>{task.title}</h3>
+			<p>{task.comment}</p>
+			<p>
+				<i>In Process by: </i>
 				{task.userEmail}
 			</p>
 			<div

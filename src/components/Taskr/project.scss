@@ -41,7 +41,7 @@ $dark: #3120e0;
 				color: white;
 			}
 			.taskList {
-				overflow-y: scroll;
+				overflow-y: auto;
 				max-height: 40vh;
 				.listTask {
 					background-color: $mid;
@@ -150,7 +150,7 @@ $dark: #3120e0;
 			.donely {
 				display: inline-block;
 				width: 350px;
-				overflow-y: scroll;
+				overflow-y: auto;
 				height: 70vh;
 
 				.task {
@@ -187,20 +187,24 @@ $dark: #3120e0;
 .chatBox {
 	.chatScreen {
 		overflow-y: auto;
-		background-color: white;
-		height: 300px;
+		background-color: #e9ebee;
+		height: 320px;
 		padding: 10px;
+		border-radius: 5px;
 	}
 	position: absolute;
 	padding: 20px;
 	bottom: 100px;
 	right: 20px;
 	background-color: $mid;
-	height: 400px;
+	height: 450px;
 	width: 300px;
 	border-radius: 5px;
 	box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
-
+	h3 {
+		color: white;
+		margin: 0 0 10px 0;
+	}
 	.chatForm {
 		position: absolute;
 		bottom: 20px;
@@ -234,12 +238,12 @@ $dark: #3120e0;
 	}
 	.currentUser {
 		background-color: #36ae7c;
-		padding: 8px;
+		padding: 0 8px;
 		color: white;
 		border-radius: 15px 0px 15px 15px;
 		margin: 4px auto;
+
 		display: inline-block;
-		text-align: end;
 	}
 	.otherUser {
 		display: inline-block;
@@ -247,7 +251,14 @@ $dark: #3120e0;
 		background-color: $mid;
 		color: white;
 		margin: 4px auto;
-		padding: 8px;
+		padding: 0px 8px;
 		border-radius: 0 15px 15px 15px;
+	}
+	.identify {
+		font-size: 14px;
+		font-style: italic;
+		font-weight: 500;
+		margin: 0;
+		margin-bottom: 5px;
 	}
 }

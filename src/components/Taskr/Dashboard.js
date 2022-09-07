@@ -174,7 +174,7 @@ export default function Dashboard() {
 											<h2>Add a new Project </h2>
 											<input required placeholder="Project Title" type="text" onChange={(e) => setGroupProject(e.target.value)} />
 											<textarea required placeholder="Project Description" type="text" onChange={(e) => setGroupDescription(e.target.value)} />
-											<input required placeholder="Other Users" type="text" onChange={(e) => setOtherUsers(e.target.value)} />
+											<input required placeholder="Other Users" type="email" onChange={(e) => setOtherUsers(e.target.value)} />
 											<button>add</button>
 										</form>
 									</div>

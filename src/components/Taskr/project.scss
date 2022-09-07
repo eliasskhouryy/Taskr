@@ -21,15 +21,17 @@ $dark: #3120e0;
 	background-color: #e9ebee;
 	.newProject {
 		display: flex;
-		width: 100vw;
+		width: 80vw;
+		margin: 0 auto;
 		justify-content: space-around;
 
 		.addTask {
 			display: inline-block;
 			vertical-align: top;
 			color: $light;
-			margin: 20px;
-			width: 370px;
+			margin: 20px 0;
+			width: 350px;
+			box-shadow: rgb(204, 219, 232) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
 			h2 {
 				text-align: center;
 				margin: 0px auto;
@@ -42,16 +44,22 @@ $dark: #3120e0;
 			}
 			.taskList {
 				overflow-y: auto;
+				min-height: 25px;
 				max-height: 40vh;
+				cursor: grab;
+				width: 350px;
+				text-align: center;
 				.listTask {
+					box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
 					background-color: $mid;
-					width: 350px;
+					width: 335px;
 					display: inline-block;
-					padding: 20px;
 					cursor: grab;
-					margin: 10px;
-					margin-top: 0;
 					border-radius: 5px;
+					margin-bottom: 10px;
+					padding: 20px;
+					margin-bottom: 10px;
+
 					h3 {
 						margin: 0 auto;
 					}
@@ -99,11 +107,8 @@ $dark: #3120e0;
 				background-color: $dark;
 				padding: 20px;
 				display: block;
-				margin-left: 10px;
 				width: 350px;
 				border-radius: 5px;
-				margin-top: 10px;
-
 				h3 {
 					text-align: center;
 					margin-top: 5px;
@@ -136,14 +141,15 @@ $dark: #3120e0;
 				}
 			}
 		}
-		.done,
-		.process {
+		.done {
+			cursor: grabbing;
+
 			h2 {
 				text-align: center;
 				margin: 20px auto;
 				margin-bottom: 0px;
 				border-radius: 5px;
-				background-color: #2e9369;
+				background-color: #36ae7c;
 				padding: 20px;
 				color: white;
 			}
@@ -152,15 +158,61 @@ $dark: #3120e0;
 				width: 350px;
 				overflow-y: auto;
 				height: 70vh;
+				box-shadow: rgb(204, 219, 232) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
+				padding-top: 10px;
 
 				.task {
 					background-color: #36ae7c;
+					box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
 					color: white;
-					width: 100%;
+					width: 335px;
+					text-align: center;
+					padding: 20px;
+					margin: 0 auto;
+					margin-top: 10px;
+					border-radius: 5px;
+				}
+				.task:hover {
+					transition: all 0.2s ease-in-out;
+
+					box-shadow: #77b9a9 0px 0px 0px 3px;
+				}
+			}
+		}
+		.progress {
+			cursor: grabbing;
+
+			h2 {
+				text-align: center;
+				margin: 20px auto;
+				margin-bottom: 0px;
+				border-radius: 5px;
+				background-color: #ff5151;
+				padding: 20px;
+				color: white;
+			}
+			.donely {
+				display: inline-block;
+				width: 350px;
+				overflow-y: auto;
+				height: 70vh;
+				box-shadow: rgb(204, 219, 232) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
+				padding-top: 10px;
+				.task {
+					background-color: #ff5151;
+					box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+					color: white;
+					width: 335px;
 					text-align: center;
 					padding: 20px;
 					margin-top: 10px;
 					border-radius: 5px;
+					margin: 0 auto;
+				}
+				.task:hover {
+					transition: all 0.2s ease-in-out;
+
+					box-shadow: #77b9a9 0px 0px 0px 3px;
 				}
 			}
 		}

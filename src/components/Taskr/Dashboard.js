@@ -33,7 +33,7 @@ export default function Dashboard() {
 	};
 	const addGroupProject = async (e) => {
 		e.preventDefault();
-		await addDoc(groupProjectsRef, { users: [user.uid, ...[otherUsers]], title: groupProject, description: groupDescription, time: new Date().getTime() });
+		await addDoc(groupProjectsRef, { users: [user.uid, ...[otherUsers]], title: groupProject, description: groupDescription, groupProject: true, time: new Date().getTime() });
 		setModal2(!modal2);
 	};
 	useEffect(
@@ -139,7 +139,7 @@ export default function Dashboard() {
 									{project.users.map((useri) =>
 										user.email == useri || user.uid == useri ? (
 											<div className="projectsContainer">
-												<Link to={`/project/${project.id}`}>
+												<Link to={`/groupProject/${project.id}`}>
 													<h3>{user.uid == useri || user.email == useri ? project.title : ''}</h3>
 												</Link>
 												<h4>{user.uid == useri || user.email == useri ? project.description : ''}</h4>

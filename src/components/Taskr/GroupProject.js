@@ -11,7 +11,7 @@ import ModeCommentRoundedIcon from '@mui/icons-material/ModeCommentRounded';
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
 import './project.scss';
 
-function Project() {
+export default function GroupProject() {
 	let { id } = useParams();
 	const { logOut, user } = useUserAuth();
 	const [title, setTitle] = useState('');
@@ -36,7 +36,7 @@ function Project() {
 			}),
 		[]
 	);
-	useEffect(() => onSnapshot(collection(db, 'projects'), (snapshot) => setProjectDetails(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))), []);
+	useEffect(() => onSnapshot(collection(db, 'groupProjects'), (snapshot) => setProjectDetails(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))), []);
 	useEffect(() => onSnapshot(collection(db, 'completeTasks'), (snapshot) => setCompleteTasks(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))), []);
 	useEffect(() => onSnapshot(collection(db, 'chat'), (snapshot) => setChat(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))), []);
 
@@ -130,7 +130,7 @@ function Project() {
 							)}
 					</div>
 				</div>
-				{/* <ModeCommentRoundedIcon className="chatButton" onClick={() => setModal(!modal)} /> */}
+				<ModeCommentRoundedIcon className="chatButton" onClick={() => setModal(!modal)} />
 				{modal && (
 					<div className="chatBox">
 						<div className="chatScreen">
@@ -196,5 +196,3 @@ const Task = ({ task }) => {
 		</div>
 	);
 };
-
-export default Project;

@@ -104,23 +104,24 @@ function Project() {
 
 	const addTaskToDone = async (taskId, title, comment) => {
 		console.log('done');
-		handleDeleteFromProcess(taskId);
-		handleDelete(taskId)
-		// const taskList = window.TASKS.filter((task) => (task.taskId === id ? task.taskId : ''));
+		await handleDeleteFromProcess(taskId);
+		await handleDeleteFromCompleted(taskId)
+		await handleDelete(taskId)
 		await addDoc(completeTasksRef, { projectId: id, title: title, comment: comment, status: false, userEmail: user.email, time: new Date().getTime() });
 	};
 	const addTaskToInProcess = async (taskId, title, comment) => {
 		console.log('process');
-		handleDeleteFromCompleted(taskId)
-		handleDelete(taskId);
-		// const taskList = window.TASKS.filter((task) => (task.taskId === id ? task.taskId : ''));
+		await handleDeleteFromCompleted(taskId)
+		await handleDeleteFromProcess(taskId);
+		await handleDelete(taskId);
 		await addDoc(inProcessRef, { projectId: id, title: title, comment: comment, status: false, userEmail: user.email, time: new Date().getTime() });
 	};
 	const addTaskToToDo = async (taskId, title, comment) => {
 		console.log('todo');
-		handleDeleteFromCompleted(taskId)
-		handleDeleteFromProcess(taskId);
-		// const taskList = window.TASKS.filter((task) => (task.taskId === id ? task.taskId : ''));
+		await handleDeleteFromCompleted(taskId)
+		await handleDeleteFromProcess(taskId);
+		await handleDelete(taskId);
+		
 		await addDoc(tasksRef, { projectId: id, title: title, comment: comment, status: false, userEmail: user.email, time: new Date().getTime() });
 	};
 
@@ -203,7 +204,7 @@ function Project() {
 									)}
 							</div>
 						</div>
-						{/* <ModeCommentRoundedIcon className="chatButton" onClick={() => setModal(!modal)} /> */}
+						
 						{modal && (
 							<div className="chatBox">
 								<div className="chatScreen">

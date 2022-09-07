@@ -35,6 +35,8 @@ export default function GroupProject() {
 	const [completeTasks, setCompleteTasks] = useState([]);
 	const [board, setBoard] = useState([]);
 	const [modal, setModal] = useState(false);
+	const inProcessGroupRef = collection(db, 'inProcessGroup');
+	const [inProcessGroup, setInProcessGroup] = useState(['ehde']);
 
 	useEffect(
 		() =>
@@ -48,7 +50,8 @@ export default function GroupProject() {
 	useEffect(() => onSnapshot(collection(db, 'groupProjects'), (snapshot) => setProjectDetails(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))), []);
 	useEffect(() => onSnapshot(collection(db, 'completeTasks'), (snapshot) => setCompleteTasks(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))), []);
 	useEffect(() => onSnapshot(collection(db, 'chat'), (snapshot) => setChat(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))), []);
-
+	useEffect(() => onSnapshot(collection(db, 'inProcessGroup'), (snapshot) => setInProcessGroup(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))), []);
+	
 	const handleDelete = async (id) => {
 		const projectsRef = doc(db, 'tasks', id);
 		try {
@@ -57,6 +60,25 @@ export default function GroupProject() {
 			alert(err);
 		}
 	};
+	const handleDeleteFromProcess = async (id) => {
+		console.log(id)
+		const inProcessGroupRef = doc(db, 'inProcessGroup', id);
+		try {
+			await deleteDoc(inProcessGroupRef);
+		} catch (err) {
+			alert(err);
+		}
+	};
+	const handleDeleteFromCompleted = async (id) => {
+		console.log(id)
+		const inProcessGroupRef = doc(db, 'completeTasks', id);
+		try {
+			await deleteDoc(inProcessGroupRef);
+		} catch (err) {
+			alert(err);
+		}
+	};
+
 	const [{ isOver }, drop] = useDrop(() => ({
 		accept: 'task',
 		drop: (item) => addTaskToDone(item.id, item.title, item.comment),
@@ -65,12 +87,43 @@ export default function GroupProject() {
 		}),
 	}));
 
+	const [{ isOver1 }, drop1] = useDrop(() => ({
+		accept: 'task',
+		drop: (item) => addTaskToInProcess(item.id, item.title, item.comment),
+		collect: (monitor) => ({
+			isOver: !!monitor.isOver(),
+		}),
+	}));
+	
+	const [{ isOver2 }, drop2] = useDrop(() => ({
+		accept: 'task',
+		drop: (item) => addTaskToToDo(item.id, item.title, item.comment),
+		collect: (monitor) => ({
+			isOver: !!monitor.isOver(),
+		}),
+	}));
+
 	const addTaskToDone = async (taskId, title, comment) => {
-		handleDelete(taskId);
-		const taskList = window.TASKS.filter((task) => (task.taskId === id ? task.taskId : ''));
+		console.log('done');
+		handleDeleteFromProcess(taskId);
+		handleDelete(taskId)
+		// const taskList = window.TASKS.filter((task) => (task.taskId === id ? task.taskId : ''));
 		await addDoc(completeTasksRef, { projectId: id, title: title, comment: comment, status: false, userEmail: user.email, time: new Date().getTime() });
-		setBoard((board) => [...board, ...taskList]);
 	};
+	const addTaskToInProcess = async (taskId, title, comment) => {
+		console.log('process');
+		handleDeleteFromCompleted(taskId)
+		handleDelete(taskId);
+		// const taskList = window.TASKS.filter((task) => (task.taskId === id ? task.taskId : ''));
+		await addDoc(inProcessGroupRef, { projectId: id, title: title, comment: comment, status: false, userEmail: user.email, time: new Date().getTime() });
+	};
+	const addTaskToToDo = async (taskId, title, comment) => {
+		console.log('todo');
+		handleDeleteFromCompleted(taskId)
+		handleDeleteFromProcess(taskId);
+		// const taskList = window.TASKS.filter((task) => (task.taskId === id ? task.taskId : ''));
+		await addDoc(tasksRef, { projectId: id, title: title, comment: comment, status: false, userEmail: user.email, time: new Date().getTime() });
+	}
 
 	const addTask = async (e) => {
 		e.preventDefault();
@@ -99,7 +152,7 @@ export default function GroupProject() {
 					<div className="newProject">
 						<div className="addTask">
 							<h2 className="h3">Tasks</h2>
-							<div className="taskList">
+							<div className="taskList" ref={drop2}>
 								{allTasks
 									.sort((objA, objB) => Number(objA.time) - Number(objB.time))
 									.map((task) => {
@@ -119,6 +172,22 @@ export default function GroupProject() {
 								<button onClick={addTask}>Add</button>
 							</div>
 						</div>
+						<div className="process">
+							<h2>In Process</h2>
+							<div className="donely taskList" ref={drop1}>
+								{inProcessGroup
+									.sort((objA, objB) => Number(objA.time) - Number(objB.time))
+									.map((task) =>
+										id === task.projectId ? (
+											<div className="listTask task">
+												<Process task={task} />
+											</div>
+										) : (
+											''
+										)
+									)}
+							</div>
+						</div>
 						<div className="done">
 							<h2>Completed</h2>
 							<div className="donely" ref={drop}>
@@ -126,18 +195,8 @@ export default function GroupProject() {
 									.sort((objA, objB) => Number(objA.time) - Number(objB.time))
 									.map((task) =>
 										id === task.projectId ? (
-											<div className="task" key={task.id} id={task.id}>
-												<h3>{id === task.projectId && task.title}</h3>
-												<p>{id === task.projectId && task.comment}</p>
-												<p>{id === task.projectId && task.status}</p>
-
-												{id === task.projectId && task.userEmail ? (
-													<p>
-														<i>Completed by: </i> {task.userEmail}
-													</p>
-												) : (
-													''
-												)}
+											<div className="task" >
+												<Complete task={task} />
 											</div>
 										) : (
 											''
@@ -202,6 +261,74 @@ const Task = ({ task }) => {
 			<p>{task.comment}</p>
 			<p>
 				<i>created by: </i>
+				{task.userEmail}
+			</p>
+			<div
+				className="close"
+				onClick={() => {
+					handleDelete(task.id);
+				}}
+			></div>
+		</div>
+	);
+};
+const Process = ({ task }) => {
+	const handleDelete = async (id) => {
+		const inProcessRef = doc(db, 'inProcess', id);
+		try {
+			await deleteDoc(inProcessRef);
+		} catch (err) {
+			alert(err);
+		}
+	};
+	const [{ isDragging }, drag] = useDrag(() => ({
+		type: 'task',
+		item: { id: task.id, title: task.title, comment: task.comment },
+		collect: (monitor) => ({
+			isDragging: !!monitor.isDragging(),
+		}),
+	}));
+
+	return (
+		<div key={task.id} ref={drag} id={task.id}>
+			<h3>{task.title}</h3>
+			<p>{task.comment}</p>
+			<p>
+				<i>In Process by: </i>
+				{task.userEmail}
+			</p>
+			<div
+				className="close"
+				onClick={() => {
+					handleDelete(task.id);
+				}}
+			></div>
+		</div>
+	);
+};
+const Complete = ({ task }) => {
+	const handleDelete = async (id) => {
+		const inProcessRef = doc(db, 'inProcess', id);
+		try {
+			await deleteDoc(inProcessRef);
+		} catch (err) {
+			alert(err);
+		}
+	};
+	const [{ isDragging }, drag] = useDrag(() => ({
+		type: 'task',
+		item: { id: task.id, title: task.title, comment: task.comment },
+		collect: (monitor) => ({
+			isDragging: !!monitor.isDragging(),
+		}),
+	}));
+
+	return (
+		<div key={task.id} ref={drag} id={task.id}>
+			<h3>{task.title}</h3>
+			<p>{task.comment}</p>
+			<p>
+				<i>Completed by: </i>
 				{task.userEmail}
 			</p>
 			<div

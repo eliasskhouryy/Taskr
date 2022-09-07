@@ -10,8 +10,17 @@ import NavBar from './NavBar';
 import ModeCommentRoundedIcon from '@mui/icons-material/ModeCommentRounded';
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
 import './project.scss';
+import PacmanLoader from 'react-spinners/PacmanLoader';
 
 export default function GroupProject() {
+	const [loading, setLoading] = useState(false);
+	useEffect(() => {
+		setLoading(true);
+		setTimeout(() => {
+			setLoading(false);
+		}, 1900);
+	}, []);
+
 	let { id } = useParams();
 	const { logOut, user } = useUserAuth();
 	const [title, setTitle] = useState('');
@@ -79,85 +88,93 @@ export default function GroupProject() {
 
 	return (
 		<div className="projectBody">
-			<NavBar mainTitle={'Project'} />
-
-			<div className="newProject">
-				<div className="addTask">
-					<h2 className="h3">Tasks</h2>
-					<div className="taskList">
-						{allTasks
-							.sort((objA, objB) => Number(objA.time) - Number(objB.time))
-							.map((task) => {
-								if (id === task.projectId) {
-									return (
-										<div className="listTask">
-											<Task task={task} />
-										</div>
-									);
-								}
-							})}
-					</div>
-					<div className="taskForm">
-						<h3>Add a new Task </h3>
-						<input required value={title} type="text" onChange={(e) => setTitle(e.target.value)} placeholder="task title" />
-						<textarea value={comment} type="text" onChange={(e) => setComment(e.target.value)} placeholder="comment" />
-						<button onClick={addTask}>Add</button>
-					</div>
+			{loading ? (
+				<div className="pacman">
+					<PacmanLoader size="50" color="#6236d6" />
 				</div>
-				<div className="done">
-					<h2>Completed</h2>
-					<div className="donely" ref={drop}>
-						{completeTasks
-							.sort((objA, objB) => Number(objA.time) - Number(objB.time))
-							.map((task) =>
-								id === task.projectId ? (
-									<div className="task" key={task.id} id={task.id}>
-										<h3>{id === task.projectId && task.title}</h3>
-										<p>{id === task.projectId && task.comment}</p>
-										<p>{id === task.projectId && task.status}</p>
+			) : (
+				<div>
+					{projectDetails.map((project) => (project.id === id ? <NavBar mainTitle={project.title} /> : ''))}
 
-										{id === task.projectId && task.userEmail ? (
-											<p>
-												<i>Completed by: </i> {task.userEmail}
-											</p>
+					<div className="newProject">
+						<div className="addTask">
+							<h2 className="h3">Tasks</h2>
+							<div className="taskList">
+								{allTasks
+									.sort((objA, objB) => Number(objA.time) - Number(objB.time))
+									.map((task) => {
+										if (id === task.projectId) {
+											return (
+												<div className="listTask">
+													<Task task={task} />
+												</div>
+											);
+										}
+									})}
+							</div>
+							<div className="taskForm">
+								<h3>Add a new Task </h3>
+								<input required value={title} type="text" onChange={(e) => setTitle(e.target.value)} placeholder="task title" />
+								<textarea value={comment} type="text" onChange={(e) => setComment(e.target.value)} placeholder="comment" />
+								<button onClick={addTask}>Add</button>
+							</div>
+						</div>
+						<div className="done">
+							<h2>Completed</h2>
+							<div className="donely" ref={drop}>
+								{completeTasks
+									.sort((objA, objB) => Number(objA.time) - Number(objB.time))
+									.map((task) =>
+										id === task.projectId ? (
+											<div className="task" key={task.id} id={task.id}>
+												<h3>{id === task.projectId && task.title}</h3>
+												<p>{id === task.projectId && task.comment}</p>
+												<p>{id === task.projectId && task.status}</p>
+
+												{id === task.projectId && task.userEmail ? (
+													<p>
+														<i>Completed by: </i> {task.userEmail}
+													</p>
+												) : (
+													''
+												)}
+											</div>
 										) : (
 											''
-										)}
-									</div>
-								) : (
-									''
-								)
-							)}
+										)
+									)}
+							</div>
+						</div>
+						<ModeCommentRoundedIcon className="chatButton" onClick={() => setModal(!modal)} />
+						{modal && (
+							<div className="chatBox">
+								<div className="chatScreen">
+									{chat
+										.sort((objA, objB) => Number(objA.time) - Number(objB.time))
+										.map((item) => {
+											return (
+												<div>
+													{' '}
+													{id === item.projectId && (
+														<div>{item.userEmail === user.email ? <p className="currentUser">{item.message}</p> : <p className="otherUser">{item.message}</p>}</div>
+													)}
+												</div>
+											);
+										})}
+								</div>
+								<div className="chatForm">
+									<form onSubmit={addChat}>
+										<input value={message} onChange={(e) => setMessage(e.target.value)} required type="text" />
+										<button>
+											<SendRoundedIcon className="send" />
+										</button>
+									</form>
+								</div>
+							</div>
+						)}
 					</div>
 				</div>
-				<ModeCommentRoundedIcon className="chatButton" onClick={() => setModal(!modal)} />
-				{modal && (
-					<div className="chatBox">
-						<div className="chatScreen">
-							{chat
-								.sort((objA, objB) => Number(objA.time) - Number(objB.time))
-								.map((item) => {
-									return (
-										<div>
-											{' '}
-											{id === item.projectId && (
-												<div>{item.userEmail === user.email ? <p className="currentUser">{item.message}</p> : <p className="otherUser">{item.message}</p>}</div>
-											)}
-										</div>
-									);
-								})}
-						</div>
-						<div className="chatForm">
-							<form onSubmit={addChat}>
-								<input value={message} onChange={(e) => setMessage(e.target.value)} required type="text" />
-								<button>
-									<SendRoundedIcon className="send" />
-								</button>
-							</form>
-						</div>
-					</div>
-				)}
-			</div>
+			)}
 		</div>
 	);
 }

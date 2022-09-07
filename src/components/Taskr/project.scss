@@ -6,6 +6,15 @@ $mid-light: #21e1e1;
 $mid: #3b9ae1;
 $dark: #3120e0;
 
+.pacman {
+	display: block;
+	height: 100%;
+	width: 100%;
+	margin: 0 auto;
+	padding-top: 20%;
+	padding-left: 47%;
+}
+
 .projectBody {
 	height: 100vh;
 	width: 100%;
@@ -176,9 +185,10 @@ $dark: #3120e0;
 
 .chatBox {
 	.chatScreen {
-		overflow-y: scroll;
-		background-color: $mid-light;
+		overflow-y: auto;
+		background-color: white;
 		height: 300px;
+		padding: 10px;
 	}
 	position: absolute;
 	padding: 20px;
@@ -222,11 +232,21 @@ $dark: #3120e0;
 		}
 	}
 	.currentUser {
-		width: 100%;
-		text-align: right;
+		background-color: #36ae7c;
+		padding: 8px;
+		color: white;
+		border-radius: 15px 0px 15px 15px;
+		margin: 4px auto;
+		display: inline-block;
+		text-align: end;
 	}
 	.otherUser {
-		width: 100%;
+		display: inline-block;
 		text-align: left;
+		background-color: $mid;
+		color: white;
+		margin: 4px auto;
+		padding: 8px;
+		border-radius: 0 15px 15px 15px;
 	}
 }

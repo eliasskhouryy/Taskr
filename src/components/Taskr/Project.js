@@ -37,7 +37,9 @@ function Project() {
 	const [board, setBoard] = useState([]);
 	const [modal, setModal] = useState(false);
 	const inProcessRef = collection(db, 'inProcess');
-	const [inProcess, setInProcess] = useState(['ehde']);
+	const [inProcess, setInProcess] = useState([]);
+	
+	
 
 	useEffect(
 		() =>
@@ -91,48 +93,42 @@ function Project() {
 	const [{ isOver1 }, drop1] = useDrop(() => ({
 		accept: 'task',
 		drop: (item) => addTaskToInProcess(item.id, item.title, item.comment),
-		collect: (monitor) => {
-			return {isOver: !!monitor.isOver()}
-		},
+		collect: (monitor) => ({
+			 isOver: !!monitor.isOver(),
+		}),
 	}));
 	const [{ isOver2 }, drop2] = useDrop(() => ({
 		accept: 'task',
-		drop: (item) => {
-			if( completeTasksRef._find(item.title)  )
-			return addTaskToToDo(item.id, item.title, item.comment,)
-			console.log('hellooo')
-		} ,
+		drop: (item) =>  addTaskToToDo(item.id, item.title, item.comment),
 		collect: (monitor) => ({
 			isOver: !!monitor.isOver(),
 		}),
 	}));
 
 	const addTaskToDone = async (taskId, title, comment) => {
-		console.log('done');
-		await handleDeleteFromProcess(taskId);
-		await handleDeleteFromCompleted(taskId);
-		await handleDelete(taskId);
 		await addDoc(completeTasksRef, { projectId: id, title: title, comment: comment, status: false, userEmail: user.email, time: new Date().getTime() });
+		handleDeleteFromCompleted(taskId);
+		handleDeleteFromProcess(taskId);
+		handleDelete(taskId);
 	};
 	const addTaskToInProcess = async (taskId, title, comment) => {
-		console.log('process');
-		await handleDeleteFromCompleted(taskId);
-		await handleDeleteFromProcess(taskId);
-		await handleDelete(taskId);
 		await addDoc(inProcessRef, { projectId: id, title: title, comment: comment, status: false, userEmail: user.email, time: new Date().getTime() });
+		handleDeleteFromProcess(taskId);
+		handleDeleteFromCompleted(taskId);
+		handleDelete(taskId);
 	};
-	const addTaskToToDo = async (taskId, title, comment) => {
+	const addTaskToToDo = async (taskId, title, comment, originalId) => {
+		await addDoc(tasksRef, { projectId: id, originalId: originalId, title: title, comment: comment, status: false, userEmail: user.email, time: new Date().getTime() });
+		handleDelete(taskId);
 		console.log('todo');
-		await handleDeleteFromCompleted(taskId);
-		await handleDeleteFromProcess(taskId);
-		await handleDelete(taskId);
-
-		await addDoc(tasksRef, { projectId: id, title: title, comment: comment, status: false, userEmail: user.email, time: new Date().getTime() });
+		handleDeleteFromCompleted(taskId);
+		handleDeleteFromProcess(taskId);
+		
 	};
 
 	const addTask = async (e) => {
 		e.preventDefault();
-		await addDoc(tasksRef, { projectId: id, title: title, comment: comment, status: false, userEmail: user.email, time: new Date().getTime() });
+		await addDoc(tasksRef, { projectId: id, originalId: title + comment, title: title, comment: comment, status: false, userEmail: user.email, time: new Date().getTime() });
 		setTitle('');
 		setComment('');
 	};

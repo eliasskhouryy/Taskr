@@ -11,7 +11,7 @@ import ModeCommentRoundedIcon from '@mui/icons-material/ModeCommentRounded';
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
 import './project.scss';
 import PacmanLoader from 'react-spinners/PacmanLoader';
-import _ from 'underscore'
+import _ from 'underscore';
 
 function Project() {
 	const [loading, setLoading] = useState(false);
@@ -92,16 +92,13 @@ function Project() {
 		accept: 'task',
 		drop: (item) => addTaskToInProcess(item.id, item.title, item.comment),
 		collect: (monitor) => {
-			return {isOver: !!monitor.isOver()}
+			return { isOver: !!monitor.isOver() };
 		},
 	}));
 	const [{ isOver2 }, drop2] = useDrop(() => ({
 		accept: 'task',
-		drop: (item) => {
-			if( completeTasksRef._find(item.title)  )
-			return addTaskToToDo(item.id, item.title, item.comment,)
-			console.log('hellooo')
-		} ,
+		drop: (item) => addTaskToToDo(item.id, item.title, item.comment),
+
 		collect: (monitor) => ({
 			isOver: !!monitor.isOver(),
 		}),
@@ -256,10 +253,10 @@ const Task = ({ task }) => {
 		type: 'task',
 		item: { id: task.id, title: task.title, comment: task.comment },
 		collect: (monitor) => {
-			
-			return ({
-			isDragging: !!monitor.isDragging(),
-		})},
+			return {
+				isDragging: !!monitor.isDragging(),
+			};
+		},
 	}));
 
 	return (

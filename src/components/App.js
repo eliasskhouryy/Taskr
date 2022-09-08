@@ -13,7 +13,7 @@ function App() {
 	const user = useUserAuth();
 
 	return (
-		<DndProvider backend={HTML5Backend}>
+		<DndProvider debugMode={true} backend={HTML5Backend}>
 			<div className="App">
 				<Router>
 					<UserAuthContextProvider>

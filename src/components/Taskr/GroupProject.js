@@ -131,9 +131,9 @@ export default function GroupProject() {
 	};
 	const addTaskToToDo = async (taskId, title, comment) => {
 		console.log('todo');
-		await handleDeleteFromCompleted(taskId);
-		await handleDeleteFromProcess(taskId);
-		await handleDelete(taskId)
+		await handleDeleteFromCompleted(taskId);// deletes task from Completed when its dropped on tasks/ToDo
+		await handleDeleteFromProcess(taskId);// deletes task from Process when its dropped on tasks/ToDo
+		await handleDelete(taskId)// deletes task from tasks/ToDo when its dropped on tasks/ToDo
 		await addDoc(tasksRef, { projectId: id, title: title, comment: comment, status: false, userEmail: user.email, time: new Date().getTime() });// adds new task for this container into firebase
 	};
 
@@ -153,7 +153,7 @@ export default function GroupProject() {
 
 	return (
 		<div className="projectBody">
-			{loading ? (
+			{loading ? ( // while data is lodaing from database, pacman comes up as a loading sign
 				<div className="pacman">
 					<PacmanLoader size="50" color="#6236d6" />
 				</div>
@@ -164,11 +164,11 @@ export default function GroupProject() {
 					<div className="newProject">
 						<div className="addTask">
 							<h2 className="h3">Tasks</h2>
-							<div className="taskList" ref={drop2}>
+							<div className="taskList" ref={drop2}>{/*  drop for dnd so that it knows where you can drop things */}
 								{allTasks
-									.sort((objA, objB) => Number(objA.time) - Number(objB.time))
-									.map((task) => {
-										if (id === task.projectId) {
+									.sort((objA, objB) => Number(objA.time) - Number(objB.time))// sorts tasks by its timestamp
+									.map((task) => {// maps put all tasks from this div and shows them
+										if (id === task.projectId) {// id had to match project id to show up
 											return (
 												<div className="listTask">
 													<Task task={task} />
@@ -186,11 +186,11 @@ export default function GroupProject() {
 						</div>
 						<div className="progress">
 							<h2>In Progress</h2>
-							<div className="donely taskList" ref={drop1}>
+							<div className="donely taskList" ref={drop1}>{/*  drop for dnd so that it knows where you can drop things */}
 								{inProcessGroup
-									.sort((objA, objB) => Number(objA.time) - Number(objB.time))
-									.map((task) =>
-										id === task.projectId ? (
+									.sort((objA, objB) => Number(objA.time) - Number(objB.time))// sorts tasks by its timestamp
+									.map((task) =>// maps put all tasks from this div and shows them
+										id === task.projectId ? (// id had to match project id to show up
 											<div className="listTask task">
 												<Process task={task} />
 											</div>
@@ -202,11 +202,11 @@ export default function GroupProject() {
 						</div>
 						<div className="done">
 							<h2>Completed</h2>
-							<div className="donely" ref={drop}>
+							<div className="donely" ref={drop}> {/*  drop for dnd so that it knows where you can drop things */}
 								{completeTasks
-									.sort((objA, objB) => Number(objA.time) - Number(objB.time))
-									.map((task) =>
-										id === task.projectId ? (
+									.sort((objA, objB) => Number(objA.time) - Number(objB.time))// sorts tasks by its timestamp
+									.map((task) =>// maps put all tasks from this div and shows them
+										id === task.projectId ? (// id had to match project id to show up
 											<div className="task">
 												<Complete task={task} />
 											</div>
@@ -222,12 +222,12 @@ export default function GroupProject() {
 								<h3>Group Chat</h3>
 								<div className="chatScreen" ref={messageEl}>
 									{chat
-										.sort((objA, objB) => Number(objA.time) - Number(objB.time))
-										.map((item) => {
+										.sort((objA, objB) => Number(objA.time) - Number(objB.time))// sorts tasks by its timestamp
+										.map((item) => {// maps put all tasks from this div and shows them
 											return (
 												<div>
 													{' '}
-													{id === item.projectId && (
+													{id === item.projectId && (// id had to match project id to show up
 														<div>
 															{item.userEmail === user.email ? (
 																<div className="currentUser">

@@ -64,7 +64,7 @@ export default function GroupProject() {
 	useEffect(() => onSnapshot(collection(db, 'chat'), (snapshot) => setChat(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))), []);
 	useEffect(() => onSnapshot(collection(db, 'inProcessGroup'), (snapshot) => setInProcessGroup(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))), []);
 
-	const handleDelete = async (id) => {
+	const handleDelete = async (id) => {// Deletes data from database when task is being droppe
 		const projectsRef = doc(db, 'tasks', id);
 		try {
 			await deleteDoc(projectsRef);
@@ -72,7 +72,7 @@ export default function GroupProject() {
 			alert(err);
 		}
 	};
-	const handleDeleteFromProcess = async (id) => {
+	const handleDeleteFromProcess = async (id) => {// Deletes data from database when task is being droppe
 		console.log(id);
 		const inProcessGroupRef = doc(db, 'inProcessGroup', id);
 		try {
@@ -81,7 +81,7 @@ export default function GroupProject() {
 			alert(err);
 		}
 	};
-	const handleDeleteFromCompleted = async (id) => {
+	const handleDeleteFromCompleted = async (id) => {// Deletes data from database when task is being droppe
 		console.log(id);
 		const inProcessGroupRef = doc(db, 'completeTasks', id);
 		try {
@@ -91,55 +91,55 @@ export default function GroupProject() {
 		}
 	};
 
-	const [{ isOver }, drop] = useDrop(() => ({
-		accept: 'task',
-		drop: (item) => addTaskToDone(item.id, item.title, item.comment),
-		collect: (monitor) => ({
+	const [{ isOver }, drop] = useDrop(() => ({// dnd function
+		accept: 'task',// accepts the item in thsi case task but could be called everything
+		drop: (item) => addTaskToDone(item.id, item.title, item.comment),// drops the items and passes it to the function
+		collect: (monitor) => ({// monitors for example the x and y possition when its being collected and truns null when dropped
 			isOver: !!monitor.isOver(),
 		}),
 	}));
 
-	const [{ isOver1 }, drop1] = useDrop(() => ({
-		accept: 'task',
-		drop: (item) => addTaskToInProcess(item.id, item.title, item.comment),
-		collect: (monitor) => ({
+	const [{ isOver1 }, drop1] = useDrop(() => ({// dnd function
+		accept: 'task',// accepts the item in thsi case task but could be called everything
+		drop: (item) => addTaskToInProcess(item.id, item.title, item.comment),// drops the items and passes it to the function
+		collect: (monitor) => ({// monitors for example the x and y possition when its being collected and truns null when dropped
 			isOver: !!monitor.isOver(),
 		}),
 	}));
 
-	const [{ isOver2 }, drop2] = useDrop(() => ({
-		accept: 'task',
-		drop: (item) => addTaskToToDo(item.id, item.title, item.comment),
-		collect: (monitor) => ({
+	const [{ isOver2 }, drop2] = useDrop(() => ({// dnd function
+		accept: 'task',// accepts the item in thsi case task but could be called everything
+		drop: (item) => addTaskToToDo(item.id, item.title, item.comment),// drops the items and passes it to the function
+		collect: (monitor) => ({// monitors for example the x and y possition when its being collected and truns null when dropped
 			isOver: !!monitor.isOver(),
 		}),
 	}));
 
-	const addTaskToDone = async (taskId, title, comment) => {
+	const addTaskToDone = async (taskId, title, comment) => {// adding task to container with the values in argument
 		console.log('done');
-		handleDeleteFromProcess(taskId);
-		handleDelete(taskId);
-		// const taskList = window.TASKS.filter((task) => (task.taskId === id ? task.taskId : ''));
-		await addDoc(completeTasksRef, { projectId: id, title: title, comment: comment, status: false, userEmail: user.email, time: new Date().getTime() });
+		await handleDeleteFromProcess(taskId);// deletes task from Process when its dropped on Complete
+		await handleDelete(taskId);// deletes task from Complete when its dropped on Complete
+		await handleDeleteFromCompleted(taskId)// deletes task from task/ToDo when its dropped on Complete
+		await addDoc(completeTasksRef, { projectId: id, title: title, comment: comment, status: false, userEmail: user.email, time: new Date().getTime() });// adds new task for this container into firebase
 	};
-	const addTaskToInProcess = async (taskId, title, comment) => {
+	const addTaskToInProcess = async (taskId, title, comment) => {// adding task to container with the values in argument
 		console.log('process');
-		handleDeleteFromCompleted(taskId);
-		handleDelete(taskId);
-		// const taskList = window.TASKS.filter((task) => (task.taskId === id ? task.taskId : ''));
-		await addDoc(inProcessGroupRef, { projectId: id, title: title, comment: comment, status: false, userEmail: user.email, time: new Date().getTime() });
+		await handleDeleteFromCompleted(taskId);// deletes task from Complete when its dropped on Process
+		await handleDelete(taskId);// deletes task from Process when its dropped on Process
+		await handleDeleteFromProcess(taskId)// deletes task from tasks/ToDo when its dropped on Process
+		await addDoc(inProcessGroupRef, { projectId: id, title: title, comment: comment, status: false, userEmail: user.email, time: new Date().getTime() });// adds new task for this container into firebase
 	};
 	const addTaskToToDo = async (taskId, title, comment) => {
 		console.log('todo');
-		handleDeleteFromCompleted(taskId);
-		handleDeleteFromProcess(taskId);
-		// const taskList = window.TASKS.filter((task) => (task.taskId === id ? task.taskId : ''));
-		await addDoc(tasksRef, { projectId: id, title: title, comment: comment, status: false, userEmail: user.email, time: new Date().getTime() });
+		await handleDeleteFromCompleted(taskId);
+		await handleDeleteFromProcess(taskId);
+		await handleDelete(taskId)
+		await addDoc(tasksRef, { projectId: id, title: title, comment: comment, status: false, userEmail: user.email, time: new Date().getTime() });// adds new task for this container into firebase
 	};
 
 	const addTask = async (e) => {
 		e.preventDefault();
-		await addDoc(tasksRef, { projectId: id, title: title, comment: comment, status: false, userEmail: user.email, time: new Date().getTime() });
+		await addDoc(tasksRef, { projectId: id, title: title, comment: comment, status: false, userEmail: user.email, time: new Date().getTime() });// adds new task for this container into firebase
 		setTitle('');
 		setComment('');
 	};
@@ -321,7 +321,7 @@ const Process = ({ task }) => {
 			<h3>{task.title}</h3>
 			<p>{task.comment}</p>
 			<p>
-				<i>In Process by: </i>
+				<i>In Progress by: </i>
 				{task.userEmail}
 			</p>
 			<div

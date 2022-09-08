@@ -1,70 +1,49 @@
-# Getting Started with Create React App
+# Nourished
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<img style="width: 200px; height: 100px; object-fit: cover; " alt="Font Example Screenshot" src="public/logo-with-title.png">
 
-## Available Scripts
+<p style="margin: 0 auto;">
+</p>
+"Taskr" is a web-based application that allows users to create projects and add tasks to identify and track the status of their progress. Taskr allows users to create collaboration projects which keeps track of which user has created, updated and completed individual tasks. The collaboration components also incorperates a chat box which allows collaborative users to communicate within the project.
+This application was co-create by Elias Khoury & Dominik Michel.
+<br/>
+<p style="margin: 0 auto;">
+<img style="width: 600px; " alt="Font Example Screenshot" src="public/login-shot.png">
 
-In the project directory, you can run:
+<img style="width: 600px; " alt="Font Example Screenshot" src="public/project-page.png">
+</p>
 
-### `npm start`
+## Login
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+-   Uses firebase Authentication and encryption to protect user password and email.
+-   Google signin function has been implemented as well so the user can sign in directly with their gmail account through a popup menu.
+    <br/>
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Dashboard
 
-### `npm test`
+-   Shows both individual and collaboration projects.
+-   Forms to add either or both individual and collaboration projects.
+    <br/>
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Project page
 
-### `npm run build`
+-   Allows users to create tasks.
+-   Ability to drag and drop them into the in progress column and/or the completed column.
+-   For collaboration Projects, users can chat in the chat bubble created. User details are also displayed when creating, progressing and completing tasks.
+    <br/>
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Features
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+1. Sign in (with google sign in included)/Sign out
+2. Create Projects and collaboration projects.
+3. Add other users to collaboration projects.
+4. Group chat available for the users in the collaboration project.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Tools, Gems and APIs used
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+-   FireBase for backend
+-   React for front end
+-   CSS - Done from scratch
+-   DND to assist with the Drag N Drop feature setup.
+-   React-router-dom used for routes.
+-   Firebase tools to host the website.

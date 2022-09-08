@@ -54,7 +54,7 @@ function Project() {
 	useEffect(() => onSnapshot(collection(db, 'chat'), (snapshot) => setChat(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))), []);
 
 	const handleDelete = async (id) => {
-		console.log(id)
+		console.log(id);
 		const projectsRef = doc(db, 'tasks', id);
 		try {
 			await deleteDoc(projectsRef);
@@ -63,7 +63,7 @@ function Project() {
 		}
 	};
 	const handleDeleteFromProcess = async (id) => {
-		console.log(id)
+		console.log(id);
 		const inProcessRef = doc(db, 'inProcess', id);
 		try {
 			await deleteDoc(inProcessRef);
@@ -72,7 +72,7 @@ function Project() {
 		}
 	};
 	const handleDeleteFromCompleted = async (id) => {
-		console.log(id)
+		console.log(id);
 		const inProcessRef = doc(db, 'completeTasks', id);
 		try {
 			await deleteDoc(inProcessRef);
@@ -110,23 +110,23 @@ function Project() {
 	const addTaskToDone = async (taskId, title, comment) => {
 		console.log('done');
 		await handleDeleteFromProcess(taskId);
-		await handleDeleteFromCompleted(taskId)
-		await handleDelete(taskId)
+		await handleDeleteFromCompleted(taskId);
+		await handleDelete(taskId);
 		await addDoc(completeTasksRef, { projectId: id, title: title, comment: comment, status: false, userEmail: user.email, time: new Date().getTime() });
 	};
 	const addTaskToInProcess = async (taskId, title, comment) => {
 		console.log('process');
-		await handleDeleteFromCompleted(taskId)
+		await handleDeleteFromCompleted(taskId);
 		await handleDeleteFromProcess(taskId);
 		await handleDelete(taskId);
 		await addDoc(inProcessRef, { projectId: id, title: title, comment: comment, status: false, userEmail: user.email, time: new Date().getTime() });
 	};
 	const addTaskToToDo = async (taskId, title, comment) => {
 		console.log('todo');
-		await handleDeleteFromCompleted(taskId)
+		await handleDeleteFromCompleted(taskId);
 		await handleDeleteFromProcess(taskId);
 		await handleDelete(taskId);
-		
+
 		await addDoc(tasksRef, { projectId: id, title: title, comment: comment, status: false, userEmail: user.email, time: new Date().getTime() });
 	};
 
@@ -177,8 +177,8 @@ function Project() {
 								<button onClick={addTask}>Add</button>
 							</div>
 						</div>
-						<div className="process">
-							<h2>In Process</h2>
+						<div className="progress">
+							<h2>In Progress</h2>
 							<div className="donely taskList" ref={drop1}>
 								{inProcess
 									.sort((objA, objB) => Number(objA.time) - Number(objB.time))
@@ -209,7 +209,7 @@ function Project() {
 									)}
 							</div>
 						</div>
-						
+
 						{modal && (
 							<div className="chatBox">
 								<div className="chatScreen">

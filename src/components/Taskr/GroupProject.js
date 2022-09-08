@@ -172,8 +172,8 @@ export default function GroupProject() {
 								<button onClick={addTask}>Add</button>
 							</div>
 						</div>
-						<div className="process">
-							<h2>In Process</h2>
+						<div className="progress">
+							<h2>In Progress</h2>
 							<div className="donely taskList" ref={drop1}>
 								{inProcessGroup
 									.sort((objA, objB) => Number(objA.time) - Number(objB.time))

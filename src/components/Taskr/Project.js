@@ -11,7 +11,7 @@ import ModeCommentRoundedIcon from '@mui/icons-material/ModeCommentRounded';
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
 import './project.scss';
 import PacmanLoader from 'react-spinners/PacmanLoader';
-import _ from 'underscore'
+import _ from 'underscore';
 
 function Project() {
 	const [loading, setLoading] = useState(false);
@@ -37,9 +37,7 @@ function Project() {
 	const [board, setBoard] = useState([]);
 	const [modal, setModal] = useState(false);
 	const inProcessRef = collection(db, 'inProcess');
-	const [inProcess, setInProcess] = useState([]);
-	
-	
+	const [inProcess, setInProcess] = useState(['ehde']);
 
 	useEffect(
 		() =>
@@ -65,7 +63,6 @@ function Project() {
 		}
 	};
 	const handleDeleteFromProcess = async (id) => {
-		console.log(id);
 		const inProcessRef = doc(db, 'inProcess', id);
 		try {
 			await deleteDoc(inProcessRef);
@@ -74,10 +71,9 @@ function Project() {
 		}
 	};
 	const handleDeleteFromCompleted = async (id) => {
-		console.log(id);
-		const inProcessRef = doc(db, 'completeTasks', id);
+		const completedTasksRef = doc(db, 'completeTasks', id);
 		try {
-			await deleteDoc(inProcessRef);
+			await deleteDoc(completedTasksRef);
 		} catch (err) {
 			alert(err);
 		}
@@ -93,43 +89,45 @@ function Project() {
 	const [{ isOver1 }, drop1] = useDrop(() => ({
 		accept: 'task',
 		drop: (item) => addTaskToInProcess(item.id, item.title, item.comment),
-		collect: (monitor) => ({
-			 isOver: !!monitor.isOver(),
-		}),
+		collect: (monitor) => {
+			return { isOver: !!monitor.isOver() };
+		},
 	}));
-	
 	const [{ isOver2 }, drop2] = useDrop(() => ({
 		accept: 'task',
-		drop: (item) =>  addTaskToToDo(item.id, item.title, item.comment),
+		drop: (item) => addTaskToToDo(item.id, item.title, item.comment),
+
 		collect: (monitor) => ({
 			isOver: !!monitor.isOver(),
 		}),
 	}));
 
 	const addTaskToDone = async (taskId, title, comment) => {
+		console.log('done');
+		await handleDeleteFromProcess(taskId);
+		await handleDeleteFromCompleted(taskId);
+		await handleDelete(taskId);
 		await addDoc(completeTasksRef, { projectId: id, title: title, comment: comment, status: false, userEmail: user.email, time: new Date().getTime() });
-		handleDeleteFromCompleted(taskId);
-		handleDeleteFromProcess(taskId);
-		handleDelete(taskId);
 	};
 	const addTaskToInProcess = async (taskId, title, comment) => {
+		console.log('process');
+		await handleDeleteFromCompleted(taskId);
+		await handleDeleteFromProcess(taskId);
+		await handleDelete(taskId);
 		await addDoc(inProcessRef, { projectId: id, title: title, comment: comment, status: false, userEmail: user.email, time: new Date().getTime() });
-		handleDeleteFromProcess(taskId);
-		handleDeleteFromCompleted(taskId);
-		handleDelete(taskId);
 	};
-	const addTaskToToDo = async (taskId, title, comment, originalId) => {
-		await addDoc(tasksRef, { projectId: id, originalId: originalId, title: title, comment: comment, status: false, userEmail: user.email, time: new Date().getTime() });
-		handleDelete(taskId);
+	const addTaskToToDo = async (taskId, title, comment) => {
 		console.log('todo');
-		handleDeleteFromCompleted(taskId);
-		handleDeleteFromProcess(taskId);
-		
+		await handleDeleteFromCompleted(taskId);
+		await handleDeleteFromProcess(taskId);
+		await handleDelete(taskId);
+
+		await addDoc(tasksRef, { projectId: id, title: title, comment: comment, status: false, userEmail: user.email, time: new Date().getTime() });
 	};
 
 	const addTask = async (e) => {
 		e.preventDefault();
-		await addDoc(tasksRef, { projectId: id, originalId: title + comment, title: title, comment: comment, status: false, userEmail: user.email, time: new Date().getTime() });
+		await addDoc(tasksRef, { projectId: id, title: title, comment: comment, status: false, userEmail: user.email, time: new Date().getTime() });
 		setTitle('');
 		setComment('');
 	};
@@ -253,10 +251,10 @@ const Task = ({ task }) => {
 		type: 'task',
 		item: { id: task.id, title: task.title, comment: task.comment },
 		collect: (monitor) => {
-			
-			return ({
-			isDragging: !!monitor.isDragging(),
-		})},
+			return {
+				isDragging: !!monitor.isDragging(),
+			};
+		},
 	}));
 
 	return (
@@ -273,7 +271,8 @@ const Task = ({ task }) => {
 	);
 };
 const Process = ({ task }) => {
-	const handleDelete = async (id) => {
+	const handleDeleteFromProcess = async (id) => {
+		console.log(id);
 		const inProcessRef = doc(db, 'inProcess', id);
 		try {
 			await deleteDoc(inProcessRef);
@@ -293,24 +292,10 @@ const Process = ({ task }) => {
 		<div key={task.id} ref={drag} id={task.id}>
 			<h3>{task.title}</h3>
 			<p>{task.comment}</p>
-			<div
-				className="close"
-				onClick={() => {
-					handleDelete(task.id);
-				}}
-			></div>
 		</div>
 	);
 };
 const Complete = ({ task }) => {
-	const handleDelete = async (id) => {
-		const inProcessRef = doc(db, 'inProcess', id);
-		try {
-			await deleteDoc(inProcessRef);
-		} catch (err) {
-			alert(err);
-		}
-	};
 	const [{ isDragging }, drag] = useDrag(() => ({
 		type: 'task',
 		item: { id: task.id, title: task.title, comment: task.comment },
@@ -323,12 +308,6 @@ const Complete = ({ task }) => {
 		<div key={task.id} ref={drag} id={task.id}>
 			<h3>{task.title}</h3>
 			<p>{task.comment}</p>
-			<div
-				className="close"
-				onClick={() => {
-					handleDelete(task.id);
-				}}
-			></div>
 		</div>
 	);
 };

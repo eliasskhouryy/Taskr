@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { useUserAuth } from '../context/UserAuthContext';
 import { collection, getDocs, addDoc, updateDoc, doc, deleteDoc, orderBy } from 'firebase/firestore';
@@ -37,7 +37,19 @@ export default function GroupProject() {
 	const [modal, setModal] = useState(false);
 	const inProcessGroupRef = collection(db, 'inProcessGroup');
 	const [inProcessGroup, setInProcessGroup] = useState(['ehde']);
+	const messageEl = useRef(null);
 
+	useEffect(() => {
+		if (messageEl && messageEl.current) {
+			console.warn('after if');
+			const element = messageEl.current;
+			element.scroll({
+				top: element.scrollHeight,
+				left: 0,
+				behavior: 'smooth',
+			});
+		}
+	}, [messageEl, chat, modal]);
 	useEffect(
 		() =>
 			onSnapshot(collection(db, 'tasks'), (snapshot) => {
@@ -208,7 +220,7 @@ export default function GroupProject() {
 						{modal && (
 							<div className="chatBox">
 								<h3>Group Chat</h3>
-								<div className="chatScreen">
+								<div className="chatScreen" ref={messageEl}>
 									{chat
 										.sort((objA, objB) => Number(objA.time) - Number(objB.time))
 										.map((item) => {

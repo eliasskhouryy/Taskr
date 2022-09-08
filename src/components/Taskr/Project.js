@@ -34,7 +34,6 @@ function Project() {
 	const chatRef = collection(db, 'chat');
 	const [projectDetails, setProjectDetails] = useState([]);
 	const [completeTasks, setCompleteTasks] = useState([]);
-	const [board, setBoard] = useState([]);
 	const [modal, setModal] = useState(false);
 	const inProcessRef = collection(db, 'inProcess');
 	const [inProcess, setInProcess] = useState(['ehde']);
@@ -48,6 +47,7 @@ function Project() {
 			}),
 		[]
 	);
+
 	useEffect(() => onSnapshot(collection(db, 'projects'), (snapshot) => setProjectDetails(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))), []);
 	useEffect(() => onSnapshot(collection(db, 'completeTasks'), (snapshot) => setCompleteTasks(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))), []);
 	useEffect(() => onSnapshot(collection(db, 'inProcess'), (snapshot) => setInProcess(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))), []);
@@ -136,7 +136,6 @@ function Project() {
 
 	const addChat = async (e) => {
 		e.preventDefault();
-
 		await addDoc(chatRef, { projectId: id, message: message, userEmail: user.email, time: new Date().getTime() });
 		setMessage('');
 	};
@@ -206,33 +205,6 @@ function Project() {
 									)}
 							</div>
 						</div>
-
-						{modal && (
-							<div className="chatBox">
-								<div className="chatScreen">
-									{chat
-										.sort((objA, objB) => Number(objA.time) - Number(objB.time))
-										.map((item) => {
-											return (
-												<div>
-													{' '}
-													{id === item.projectId && (
-														<div>{item.userEmail === user.email ? <p className="currentUser">{item.message}</p> : <p className="otherUser">{item.message}</p>}</div>
-													)}
-												</div>
-											);
-										})}
-								</div>
-								<div className="chatForm">
-									<form onSubmit={addChat}>
-										<input value={message} onChange={(e) => setMessage(e.target.value)} required type="text" />
-										<button>
-											<SendRoundedIcon className="send" />
-										</button>
-									</form>
-								</div>
-							</div>
-						)}
 					</div>
 				</div>
 			)}

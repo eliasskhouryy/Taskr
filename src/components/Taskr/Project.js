@@ -97,6 +97,7 @@ function Project() {
 			 isOver: !!monitor.isOver(),
 		}),
 	}));
+	
 	const [{ isOver2 }, drop2] = useDrop(() => ({
 		accept: 'task',
 		drop: (item) =>  addTaskToToDo(item.id, item.title, item.comment),

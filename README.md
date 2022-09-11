@@ -1,6 +1,6 @@
 # Nourished
 
-<img style="width: 200px; height: 200px;  " alt="Font Example Screenshot" src="public/logo-with-title.png">
+<img style="width: 200px; height: 200px; href="https://trackr-2c1d9.firebaseapp.com/" " alt="Font Example Screenshot" src="public/logo-with-title.png">
 
 <p style="margin: 0 auto;">
 </p>

@@ -1,5 +1,5 @@
 # Nourished
-[Check it out!](https://console.firebase.google.com/project/trackr-2c1d9/hosting/sites)
+[Check it out!](https://trackr-2c1d9.firebaseapp.com/)
 <img style="width: 200px; height: 200px; " alt="Font Example Screenshot" src="public/logo-with-title.png">
 
 <p style="margin: 0 auto;">

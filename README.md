@@ -1,6 +1,6 @@
 # Nourished
 
-<img style="width: 200px; height: 100px; object-fit: cover; " alt="Font Example Screenshot" src="public/logo-with-title.png">
+<img style="width: 200px; height: 100px; object-fit: fit; " alt="Font Example Screenshot" src="public/logo-with-title.png">
 
 <p style="margin: 0 auto;">
 </p>
